@@ -1,0 +1,19 @@
+todo: 
+    * is library or not
+    * initialize git optionally
+    * Testing framework choice
+
+mkdir project_name
+touch project_name/CmakeLists.txt
+touch project_name/readme.md
+mkdir project_name/extern
+mkdir project_name/src
+
+if is_library
+    source_root = project_name/src/project_name
+    mkdir source_root
+    // no main.cc
+else
+    source_root = project_name/src
+    touch project_name/src/main.cc
+
