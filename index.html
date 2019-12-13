@@ -7,86 +7,22 @@
 
 <body>
 <div>
-Project name: 
+<label for="project_name_text_field">Project Name:</label>
 <input type="text" name="project_name_text_field" id="project_name_text_field">
+<br>
+<label for="folder_name_text_field">Folder Name:</label>
+<input type="text" name="folder_name_text_field" id="folder_name_text_field">
 </div>
-Libraries
-<div name="libaries_div">
-    <input type="checkbox" name="glow_checkbox"> GLOW<br>
-    <input type="checkbox" name="glow_extras_checkbox"> GLOW-Extras<br>
+Dependencies
+<div name="libaries_div" id="libraries_div">
+    <!-- <input type="checkbox" name="glow_checkbox">GLOW<br>
+    <input type="checkbox" name="glow_extras_checkbox">GLOW-Extras<br>
+    <input type="checkbox" name="typed_geometry_checkbox">Typed-Geometry<br>
+    <input type="checkbox" name="polymesh_checkbox">Polymesh<br>
     <input type="checkbox" name="imgui_checkbox">ImGui<br>
-    <input type="checkbox" name="ctracer_checkbox">CTracer<br>
+    <input type="checkbox" name="ctracer_checkbox">CTracer<br> -->
 </div>
-
-<p name="generated_command" id="generated_command">the command</p>
+<button onclick="onGenerateButtonClick()">Generate</button>
 </body>
-
-<button onclick="onGenerateCommandClicked()">Generate</button>
-
-<script>
-function download(filename, text) {
-  var element = document.createElement('a');
-  element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
-  element.setAttribute('download', filename);
-
-  element.style.display = 'none';
-  document.body.appendChild(element);
-
-  element.click();
-
-  document.body.removeChild(element);
-}
-
-function onGenerateCommandClicked()
-{
-    document.getElementById("generated_command").innerHTML = generate_command();
-}
-
-function generate_cmake(project_name)
-{   
-
-}
-
-function generate_command()
-{
-    project_name = document.getElementById("project_name_text_field").value;
-
-    if(!project_name)
-    {
-        window.alert("Invalid project name!");
-        return;
-    }
-
-    res = "";
-    res += "mkdir " + project_name + ";";
-
-    res += generate_cmake();
-    
-    
-
-
-    return res;
-}
-// todo: 
-//     * is library or not
-//     * initialize git optionally
-//     * Testing framework choice
-
-// mkdir project_name
-// touch project_name/CmakeLists.txt
-// touch project_name/readme.md
-// mkdir project_name/extern
-// mkdir project_name/src
-
-// if is_library
-//     source_root = project_name/src/project_name
-//     mkdir source_root
-//     // no main.cc
-// else
-//     source_root = project_name/src
-//     touch project_name/src/main.cc
-
-
-
-</script>
+<script src="create_script.js"></script>
 </html>
