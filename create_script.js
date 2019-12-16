@@ -1,75 +1,107 @@
-urlOf = new Map();
-urlOf["glfw"] = "https://github.com/glfw/glfw.git";
-urlOf["glow"] = "https://www.graphics.rwth-aachen.de:9000/Glow/glow.git";
-urlOf["glow-extras"] = "https://www.graphics.rwth-aachen.de:9000/Glow/glow-extras.git";
-urlOf["typed-geometry"] = "https://www.graphics.rwth-aachen.de:9000/ptrettner/typed-geometry.git";
-urlOf["polymesh"] = "https://www.graphics.rwth-aachen.de:9000/ptrettner/polymesh.git";
-urlOf["imgui-lean"] = "https://www.graphics.rwth-aachen.de:9000/ptrettner/imgui-lean.git";
-urlOf["ctracer"] = "https://www.graphics.rwth-aachen.de:9000/ptrettner/ctracer.git";
+class Library
+{
+    constructor(name, url)
+    {
+        this.name = name;
+        this.url = url;
+        this.dependencies = [];
+        this.checkbox == null;
+    }
+}
 
-dependsOn = new Map();
-dependsOn["glow-extras"] = "glow";
-dependsOn["glow"] = "typed-geometry";
- // todo: DIS NO WORK! needs list
+var libraries = [];
 
-dependsOn["glow"] = "glfw";
+libraries.push(new Library("glfw","https://github.com/glfw/glfw.git"));
+libraries.push(new Library("glow","https://www.graphics.rwth-aachen.de:9000/Glow/glow.git"));
+libraries.push(new Library("glow-extras","https://www.graphics.rwth-aachen.de:9000/Glow/glow-extras.git"));
+libraries.push(new Library("typed-geometry","https://www.graphics.rwth-aachen.de:9000/ptrettner/typed-geometry.git"));
+libraries.push(new Library("polymesh","https://www.graphics.rwth-aachen.de:9000/ptrettner/polymesh.git"));
+libraries.push(new Library("imgui-lean","https://www.graphics.rwth-aachen.de:9000/ptrettner/imgui-lean.git"));
+libraries.push(new Library("ctracer","https://www.graphics.rwth-aachen.de:9000/ptrettner/ctracer.git"));
 
-// todo: dependency orders are important!
-// todo: extra stuff needs to be done if glow is included!
-// # ==============================================================================
-// # Set bin dir
-// if(MSVC)
-//     set(BIN_DIR ${CMAKE_SOURCE_DIR}/bin)
-// elseif(CMAKE_BUILD_TYPE STREQUAL "")
-//     set(BIN_DIR ${CMAKE_SOURCE_DIR}/bin/Default)
-// else()
-//     set(BIN_DIR ${CMAKE_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE})
-// endif()
-// set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${BIN_DIR})
-// set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${BIN_DIR})
-// set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELWITHDEBINFO ${BIN_DIR})
-// set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${BIN_DIR})
-// set(GLOW_BIN_DIR ${CMAKE_SOURCE_DIR}/bin)
+function add_dependency(name, dependency)
+{
+    for(const lib of libraries)
+    {
+        if(lib.name == name)
+        {   
+            lib.dependencies.push(dependency);
+        }
+    }
+}
 
-// todo: maybe still glm?
-``
+add_dependency("glow-extras", "glow");
+add_dependency("glow", "glfw");
+add_dependency("glow", "typed-geometry");
+
+function get_lib(name)
+{
+    for(const lib of libraries)
+    {
+        if(lib.name == name){
+            return lib;
+        }
+    }
+    return null;
+}
+
+function disable_lib(name)
+{
+    for(lib of libraries)
+    {
+        if(lib.dependencies.includes(name))
+        {
+            var othercb = lib.checkbox;
+            othercb.checked = false;
+            disable_lib(lib.name);
+        }   
+    }        
+}
+
+function enable_lib(name)
+{
+    lib = get_lib(name);
+    for(const depend of lib.dependencies)
+    {
+        var othercb = get_lib(depend).checkbox;
+        othercb.checked = true;
+        enable_lib(depend);
+    }    
+}
 
 function onCheckboxClicked(cb)
 {
-    // todo
-    var parent = cb.parent;
+    var name = cb.value;
     if(cb.checked)
     {
-        // enable dependencies
-
-
+       enable_lib(name);
     }
     else
     {
-        // disable stuff that depends on this
-        
+        disable_lib(name);
     }
 }
 
 function setupCheckboxes()
 {
     container = document.getElementById("libraries_div");
-
-    Object.keys(urlOf).forEach(function(name) {
+    for(lib of libraries)
+    {
         var checkbox = document.createElement("input");
-        cbId = name + "Checkbox";
+        var cbId = lib.name + "Checkbox";
         checkbox.id = cbId;
         checkbox.type = "checkbox";
-        checkbox.textContent = name;
-        checkbox.value = name;
+        checkbox.textContent = lib.name;
+        checkbox.value = lib.name;
         checkbox.onclick = function(){onCheckboxClicked(this);};
         var label = document.createElement("label");
         label.setAttribute("for", cbId);
-        label.innerHTML = name;
+        label.innerHTML = lib.name;
         container.appendChild(checkbox);
         container.appendChild(label);
         container.appendChild(document.createElement("br"));
-    });
+        lib.checkbox = checkbox;
+    }
 }
 
 function download(filename, text) 
@@ -91,24 +123,56 @@ function onGenerateCommandClicked()
     document.getElementById("generated_command").innerHTML = generate_command();
 }
 
+function depends_on(lib, dependee)
+{
+    return lib.dependencies.includes(dependee.name);
+}
+
 function getEnabledLibraries()
 {
     var libs = new Array();
-    Object.keys(urlOf).forEach(function(name) {
-        var cb = document.getElementById(name + "Checkbox");
-        console.log(cb);
-        if(cb.checked)
+    for(lib of libraries)
+    {
+        if(lib.checkbox && lib.checkbox.checked)
         {
-            libs.push({name=name, url=urlOf[name]});
+            libs.push(lib);
         }
-    });
-    // sort by dependency order
-    libs.sort(function(a,b){
-        if(a.name in )
-    });
-
+    }
+    // insertion sort
+    for (var i = 1; i < libs.length; i++) 
+    {
+        for(var j = i; j < libs.length; j++)
+        {
+            if(depends_on(libs[i], libs[j]))
+            {
+                var tmp = libs[i];
+                libs[i] = libs[j];
+                libs[j] = tmp;
+            }
+        }
+    }
     return libs;
 }
+
+const copyToClipboard = str => {
+    const el = document.createElement('textarea');  // Create a <textarea> element
+    el.value = str;                                 // Set its value to the string that you want copied
+    el.setAttribute('readonly', '');                // Make it readonly to be tamper-proof
+    el.style.position = 'absolute';                 
+    el.style.left = '-9999px';                      // Move outside the screen to make it invisible
+    document.body.appendChild(el);                  // Append the <textarea> element to the HTML document
+    const selected =            
+      document.getSelection().rangeCount > 0        // Check if there is any content selected previously
+        ? document.getSelection().getRangeAt(0)     // Store selection if found
+        : false;                                    // Mark as false to know no selection existed before
+    el.select();                                    // Select the <textarea> content
+    document.execCommand('copy');                   // Copy - only works as a result of a user action (e.g. click events)
+    document.body.removeChild(el);                  // Remove the <textarea> element
+    if (selected) {                                 // If a selection existed before copying
+      document.getSelection().removeAllRanges();    // Unselect everything on the HTML document
+      document.getSelection().addRange(selected);   // Restore the original selection
+    }
+  };
 
 function checkValidNameAndFolder()
 {
@@ -145,8 +209,31 @@ function onGenerateButtonClick()
     if(checkValidNameAndFolder())
     {
         var script = generate_script();
-        download("script.sh", script);
+        var output = document.getElementById("output_textarea");
+        output.innerHTML = script;
+        copyToClipboard(script);
     }
+}
+
+function decodeHtml(html) {
+    var txt = document.createElement("textarea");
+    txt.innerHTML = html;
+    return txt.value;
+}
+
+function onCopyToClipboardClick()
+{
+    var output = document.getElementById("output_textarea");
+    copyToClipboard(decodeHtml(output.innerHTML));
+}
+
+function contains(libraries, name)
+{
+    for(const lib of libraries){
+        if(lib.name == name)
+            return true;
+    }
+    return false;
 }
 
 function generate_script()
@@ -164,16 +251,16 @@ function generate_script()
     script += "is_libary=false\n";
     script += "\n";
     script += "submodule_urls=(\n"
-    Object.keys(enabledLibs).forEach(function(name) 
+    for(const lib of enabledLibs)
     {
-        script += enabledLibs[name] + " \n";
-    });
+        script += lib.url + " \n";
+    }
     script += ")\n";
     script += "submodule_names=(\n";
-    Object.keys(enabledLibs).forEach(function(name) 
+    for(const lib of enabledLibs)
     {
-        script += name + " \n";
-    });
+        script += lib.name + " \n";
+    }
     script += ")\n";
     script += "\n";
     script += "# takes a path to where main should lie\n";
@@ -183,7 +270,7 @@ function generate_script()
     script += "    echo >> $1\n";
     script += "    echo \"int main(int /* argc */, char * /* argv */ [])\" >> $1\n";
     script += "    echo \"{\" >> $1\n";
-    script += "    echo \"    std::cout << \"Hello World\" << std::endl;\" >> $1\n";
+    script += "    echo \"    std::cout << \\\"Hello World\\\" << std::endl;\" >> $1\n";
     script += "    echo \"}\" >> $1\n";
     script += "}\n";
     script += "\n";
@@ -193,22 +280,42 @@ function generate_script()
     script += "    echo cmake_minimum_required\\(VERSION 3.8\\) > $1\n";
     script += "    echo project\\($project_name\\) >> $1\n";
     script += "    echo >> $1\n";
-    script += "    echo \# =============================================== >> $1\n";
-    script += "    echo \# Global settings >> $1\n";
+    script += "    echo \"# ===============================================\" >> $1\n";
+    script += "    echo \\\# Global settings >> $1\n";
     script += "    echo >> $1\n";
     script += "    echo set\\(CMAKE_CXX_STANDARD 17\\) >> $1\n";
     script += "    echo set\\(CMAKE_CXX_STANDARD_REQUIRED ON\\) >> $1\n";
+    script += "    echo set_property\\(GLOBAL PROPERTY USE_FOLDERS ON\\) >> $1\n";
     script += "    echo >> $1\n";
+    script += "    echo \"# ===============================================\" >> $1\n";
+    script += "    echo \\\# Bin dir >> $1\n";
+
+    script += "    echo if\\(MSVC\\) >> $1\n";
+    script += "    echo \"    \" set\\(BIN_DIR \\\${CMAKE_SOURCE_DIR}/bin\\) >> $1\n";
+    script += "    echo elseif\\(CMAKE_BUILD_TYPE STREQUAL \\\"\\\"\\) >> $1\n";
+    script += "    echo \"    \" set\\(BIN_DIR \\\${CMAKE_SOURCE_DIR}/bin/Default\\) >> $1\n";
+    script += "    echo else\\(\\) >> $1\n";
+    script += "    echo \"    \" set\\(BIN_DIR \\\${CMAKE_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE}\\) >> $1\n";
+    script += "    echo endif\\(\\) >> $1\n";
+    script += "    echo set\\(CMAKE_RUNTIME_OUTPUT_DIRECTORY \\\${BIN_DIR}\\) >> $1\n";
+    script += "    echo set\\(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE \\\${BIN_DIR}\\) >> $1\n";
+    script += "    echo set\\(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELWITHDEBINFO \\\${BIN_DIR}\\) >> $1\n";
+    script += "    echo set\\(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG \\\${BIN_DIR}\\) >> $1\n";
+    if(contains(enabledLibs, "glow"))
+    {
+        script += "    echo set\\(GLOW_BIN_DIR ${CMAKE_SOURCE_DIR}/bin\\) >> $1\n";
+    }
+
     script += "\n";
-    script += "    echo \# =============================================== >> $1\n";
-    script += "    echo \# add submodules >> $1\n";
+    script += "    echo \"# ===============================================\" >> $1\n";
+    script += "    echo \\\# add submodules >> $1\n";
     script += "    for name in ${submodule_names[*]}; do\n";
     script += "        echo add_subdirectory\\(extern/$name\\) >> $1\n";
     script += "    done\n";
     script += "\n";
     script += "    echo >> $1\n";
-    script += "    echo \# =============================================== >> $1\n";
-    script += "    echo \# Configure executable >> $1\n";
+    script += "    echo \"# ===============================================\" >> $1\n";
+    script += "    echo \\\# Configure executable >> $1\n";
     script += "\n";
     script += "    # do evil glob\n";
     script += "    echo file\\(GLOB_RECURSE SOURCES >> $1\n";
@@ -219,17 +326,29 @@ function generate_script()
     script += "    echo \\) >> $1\n";
     script += "    echo >> $1\n";
     script += "    \n";
-    script += "    echo \# group sources according to folder structure >> $1\n";
+    script += "    echo \\\# group sources according to folder structure >> $1\n";
     script += "    echo source_group\\(TREE \\${CMAKE_CURRENT_SOURCE_DIR} FILES \\${SOURCES}\\) >> $1\n";
     script += "    echo >> $1\n";
     script += "    \n";
-    script += "    echo \# =============================================== >> $1\n";
-    script += "    echo >> $1 \# Make executable\n";
+    script += "    echo \"# ===============================================\" >> $1\n";
+    script += "    echo \\\# Make executable >> $1\n";
     script += "    echo add_executable\\(\\${PROJECT_NAME} \\${SOURCES}\\) >> $1\n";
     script += "    echo >> $1\n";
     script += "\n";
-    script += "    echo \# =============================================== >> $1\n";
-    script += "    echo >> $1 \# Set link libraries\n";
+
+    if(contains(enabledLibs,"glfw"))
+    {
+        script += "    echo \"# ===============================================\" >> $1\n";
+        script += "    echo \\\# Mute some GLWF warnigns >> $1\n";
+        script += "    echo option\\(GLFW_BUILD_EXAMPLES \\\"\\\" OFF\\) >> $1\n";
+        script += "    echo option\\(GLFW_BUILD_TESTS \\\"\\\" OFF\\) >> $1\n";
+        script += "    echo option\\(GLFW_BUILD_DOCS \\\"\\\" OFF\\) >> $1\n";
+        script += "    echo option\\(GLFW_INSTALL \\\"\\\" OFF\\) >> $1\n";
+        script += "\n";
+    }
+    
+    script += "    echo \"# ===============================================\" >> $1\n";
+    script += "    echo >> $1 \\\# Set link libraries\n";
     script += "    echo target_link_libraries\\(\\${PROJECT_NAME} PUBLIC >> $1\n";
     script += "    for name in ${submodule_names[*]}; do\n";
     script += "        echo \"    \" $name >> $1\n";
@@ -239,8 +358,8 @@ function generate_script()
     script += "    echo target_include_directories\\(\\${PROJECT_NAME} PUBLIC \"src\"\\) >> $1\n";
     script += "    echo >> $1\n";
     script += "\n";
-    script += "    echo \# =============================================== >> $1\n";
-    script += "    echo \# Compile flags >> $1\n";
+    script += "    echo \"# ===============================================\" >> $1\n";
+    script += "    echo \\\# Compile flags >> $1\n";
     script += "    echo if \\(MSVC\\) >> $1\n";
     script += "    echo \"    \" target_compile_options\\(\\${PROJECT_NAME} PUBLIC >> $1\n";
     script += "    echo \"        \" /MP >> $1\n";

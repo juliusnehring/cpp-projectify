@@ -15,14 +15,14 @@
 </div>
 Dependencies
 <div name="libaries_div" id="libraries_div">
-    <!-- <input type="checkbox" name="glow_checkbox">GLOW<br>
-    <input type="checkbox" name="glow_extras_checkbox">GLOW-Extras<br>
-    <input type="checkbox" name="typed_geometry_checkbox">Typed-Geometry<br>
-    <input type="checkbox" name="polymesh_checkbox">Polymesh<br>
-    <input type="checkbox" name="imgui_checkbox">ImGui<br>
-    <input type="checkbox" name="ctracer_checkbox">CTracer<br> -->
 </div>
-<button onclick="onGenerateButtonClick()">Generate</button>
+<div name="result_div" id="result_div">
+    <button onclick="onGenerateButtonClick()">Generate</button>
+    <button onclick="onCopyToClipboardClick()">Copy to Clipboard</button>
+    <br>
+    <textarea name="output_textarea" id="output_textarea"></textarea>
+</div>
+
 </body>
 <script src="create_script.js"></script>
 </html>
