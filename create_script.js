@@ -303,10 +303,10 @@ function generate_script() {
     script += "\n";
     script += "    # do evil glob\n";
     script += "    echo file\\(GLOB_RECURSE SOURCES >> $1\n";
-    script += "    echo \"    \" \"src/*.cc\" >> $1\n";
-    script += "    echo \"    \" \"src/*.hh\" >> $1\n";
-    script += "    echo \"    \" \"src/*.cpp\" >> $1\n";
-    script += "    echo \"    \" \"src/*.h\" >> $1\n";
+    script += "    echo \"    \\\"src/*.cc\\\"\" >> $1\n";
+    script += "    echo \"    \\\"src/*.hh\\\"\" >> $1\n";
+    script += "    echo \"    \\\"src/*.cpp\\\"\" >> $1\n";
+    script += "    echo \"    \\\"src/*.h\\\"\" >> $1\n";
     script += "    echo \\) >> $1\n";
     script += "    echo >> $1\n";
     script += "    \n";
