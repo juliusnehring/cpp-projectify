@@ -243,7 +243,6 @@ function generate_script() {
     var enabledLibs = getEnabledLibraries();
 
     script += '#!/bin/bash\n';
-    script += 'project_name=" + projectName + "\n';
     script += '\n';
     script += '# takes a path to where main should lie\n';
     script += 'function make_main\n';
@@ -261,7 +260,7 @@ function generate_script() {
     script += '{\n';
     script += '    # header\n';
     script += '    echo cmake_minimum_required\\(VERSION 3.8\\) > $1\n';
-    script += '    echo project\\(" + projectName + "\\) >> $1\n';
+    script += '    echo project\\(' + projectName + '\\) >> $1\n';
     script += '    echo >> $1\n';
     script += '    echo "# ===============================================" >> $1\n';
     script += '    echo \\\# Global settings >> $1\n';
@@ -295,7 +294,7 @@ function generate_script() {
     script += '    echo "# ===============================================" >> $1\n';
     script += '    echo \\\# add submodules >> $1\n';
     for (const lib of enabledLibs) {
-        script += '    echo add_subdirectory\\(extern/" + lib.name + "\\) >> $1\n';
+        script += '    echo add_subdirectory\\(extern/' + lib.name + '\\) >> $1\n';
     }
     script += '\n';
     script += '    echo >> $1\n';
@@ -320,7 +319,7 @@ function generate_script() {
     script += '    echo add_executable\\(\\${PROJECT_NAME} \\${SOURCES}\\) >> $1\n';
     script += '    echo >> $1\n';
     script += '\n';
-    if (contains(enabledLibs, "glfw")){
+    if (contains(enabledLibs, "glfw")) {
         script += '    echo "# ===============================================" >> $1\n';
         script += '    echo \\\# Mute some GLWF warnigns >> $1\n';
         script += '    echo option\\(GLFW_BUILD_EXAMPLES \\"\\" OFF\\) >> $1\n';
@@ -334,9 +333,9 @@ function generate_script() {
     script += '    echo "# ===============================================" >> $1\n';
     script += '    echo >> $1 \\\# Set link libraries\n';
     script += '    echo target_link_libraries\\(\\${PROJECT_NAME} PUBLIC >> $1\n';
-    script += '    for name in ${submodule_names[*]}; do\n';
-    script += '        echo "    " $name >> $1\n';
-    script += '    done\n';
+    for (const lib of enabledLibs) {
+        script += '        echo "    " ' + lib.name + ' >> $1\n';
+    }
     script += '    echo \\) >> $1\n';
     script += '    echo >> $1\n';
     script += '    echo target_include_directories\\(\\${PROJECT_NAME} PUBLIC "src"\\) >> $1\n';
@@ -360,15 +359,15 @@ function generate_script() {
     script += '\n';
 
     // check if directory already exists
-    script += 'if [ -d "" + projectName + "" ]; then\n';
-    script += '    echo Directory " + projectName + " already exists!\n';
+    script += 'if [ -d "' + projectName + '" ]; then\n';
+    script += '    echo Directory ' + projectName + ' already exists!\n';
     script += '    return 1\n';
     script += 'fi\n';
     script += '\n';
 
     if (projectUrl) {
-        script += 'git clone " + projectUrl + " " + projectName + "\n';
-        script += 'cd "$project_name"\n';
+        script += 'git clone "' + projectUrl + '" "' + projectName + '"\n';
+        script += 'cd ' + projectName + '\n';
     }
     else {
         script += 'echo "No git repository given. Init new repository?"\n';
@@ -389,8 +388,8 @@ function generate_script() {
         script += 'done\n';
 
         script += 'if [[ $USER_INPUT == "YES" || $USER_INPUT == "Y" ]]; then\n';
-        script += '    mkdir "$project_name"\n';
-        script += '    cd "$project_name"\n';
+        script += '    mkdir ' + projectName + '\n';
+        script += '    cd ' + projectName + '\n';
         script += 'else\n';
         script += '    echo Aborting project setup.\n';
         script += '    return 1\n';
