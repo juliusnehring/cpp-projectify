@@ -424,8 +424,10 @@ function generate_script() {
     script += "git init\n";
     script += "\n";
     script += "cd \"extern\"\n";
-    script += "for url in ${submodule_urls[*]}; do\n";
-    script += "    git submodule add $url\n";
+    script += "len=${#submodule_urls[@]}\n";
+    script += "for (( i=0; i<$len; i++ )); do\n";
+    // script += "for url in ${submodule_urls[*]}; do\n";
+    script += "    git submodule add ${submodule_urls[$i]} ${submodule_names[$i]}\n";
     script += "done\n";
     script += "cd ..\n";
     script += "\n";
