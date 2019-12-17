@@ -37,6 +37,7 @@ function add_dependency(name, dependency) {
 }
 
 add_dependency("glow-extras", "glow");
+add_dependency("glow-extras", "imgui-lean");
 add_dependency("glow", "glfw");
 add_dependency("glow", "typed-geometry");
 add_dependency("phantasm-viewer", "phantasm-renderer");
