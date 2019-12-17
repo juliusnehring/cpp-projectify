@@ -4,7 +4,7 @@ class Library {
         this.url = url;
         this.dependencies = [];
         this.checkbox == null;
-        this.projectPage = "www.google.de";
+        this.projectPage = "http://www.google.com";
         this.description = "This is an awesome library";
     }
 }
@@ -122,10 +122,12 @@ function init() {
         var description = document.createTextNode(lib.description);
 
         var project_page = document.createElement("a");
-        var link_text = document.createTextNode(lib.projectPage);
+        var link_text = document.createTextNode(lib.projectPage.replace(/(^\w+:|^)\/\//, ''));
         project_page.appendChild(link_text)
         project_page.title = lib.projectPage;
+        project_page.title = lib.projectPage;
         project_page.href = lib.projectPage;
+        project_page.setAttribute("target", "_blank");
 
         checkbox_container.appendChild(checkbox);
         name_container.appendChild(label);
