@@ -13,12 +13,12 @@ var libraries = [];
 
 libraries.push(new Library("clean-core", "https://github.com/project-arcana/clean-core.git"));
 libraries.push(new Library("rich-log", "https://github.com/project-arcana/rich-log.git"));
-libraries.push(new Library("imgui-lean", "https://www.graphics.rwth-aachen.de:9000/ptrettner/imgui-lean.git"));
 libraries.push(new Library("ctracer", "https://www.graphics.rwth-aachen.de:9000/ptrettner/ctracer.git"));
 libraries.push(new Library("typed-geometry", "https://www.graphics.rwth-aachen.de:9000/ptrettner/typed-geometry.git"));
 libraries.push(new Library("polymesh", "https://www.graphics.rwth-aachen.de:9000/ptrettner/polymesh.git"));
 libraries.push(new Library("glfw", "https://github.com/glfw/glfw.git"));
 libraries.push(new Library("glow", "https://www.graphics.rwth-aachen.de:9000/Glow/glow.git"));
+libraries.push(new Library("imgui-lean", "https://www.graphics.rwth-aachen.de:9000/ptrettner/imgui-lean.git"));
 libraries.push(new Library("glow-extras", "https://www.graphics.rwth-aachen.de:9000/Glow/glow-extras.git"));
 libraries.push(new Library("phantasm-renderer", "https://github.com/project-arcana/phantasm-renderer.git"));
 libraries.push(new Library("nexus", "https://github.com/project-arcana/nexus.git"));
@@ -419,7 +419,7 @@ function generate_script() {
     script += "mkdir \"src\"\n";
     script += "mkdir \"bin\"\n";
     script += "\n";
-    script += "    make_main \"src/main.cc\"\n";
+    script += "make_main \"src/main.cc\"\n";
     script += "\n";
     script += "git init\n";
     script += "\n";
