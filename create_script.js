@@ -18,7 +18,7 @@ libraries.push(new Library("typed-geometry", "https://www.graphics.rwth-aachen.d
 libraries.push(new Library("polymesh", "https://www.graphics.rwth-aachen.de:9000/ptrettner/polymesh.git"));
 libraries.push(new Library("glfw", "https://github.com/glfw/glfw.git"));
 libraries.push(new Library("glow", "https://www.graphics.rwth-aachen.de:9000/Glow/glow.git"));
-libraries.push(new Library("imgui-lean", "https://www.graphics.rwth-aachen.de:9000/ptrettner/imgui-lean.git"));
+libraries.push(new Library("imgui", "https://www.graphics.rwth-aachen.de:9000/ptrettner/imgui-lean.git"));
 libraries.push(new Library("glow-extras", "https://www.graphics.rwth-aachen.de:9000/Glow/glow-extras.git"));
 libraries.push(new Library("phantasm-renderer", "https://github.com/project-arcana/phantasm-renderer.git"));
 libraries.push(new Library("nexus", "https://github.com/project-arcana/nexus.git"));
@@ -37,7 +37,7 @@ function add_dependency(name, dependency) {
 }
 
 add_dependency("glow-extras", "glow");
-add_dependency("glow-extras", "imgui-lean");
+add_dependency("glow-extras", "imgui");
 add_dependency("glow", "glfw");
 add_dependency("glow", "typed-geometry");
 add_dependency("phantasm-viewer", "phantasm-renderer");
