@@ -11,6 +11,8 @@ var libraries = [];
 
 // make sure the order in which these are pushed into the array is sensible!
 
+libraries.push(new Library("clean-core", "https://github.com/project-arcana/clean-core.git"));
+libraries.push(new Library("rich-log", "https://github.com/project-arcana/rich-log.git"));
 libraries.push(new Library("imgui-lean", "https://www.graphics.rwth-aachen.de:9000/ptrettner/imgui-lean.git"));
 libraries.push(new Library("ctracer", "https://www.graphics.rwth-aachen.de:9000/ptrettner/ctracer.git"));
 libraries.push(new Library("typed-geometry", "https://www.graphics.rwth-aachen.de:9000/ptrettner/typed-geometry.git"));
@@ -18,6 +20,13 @@ libraries.push(new Library("polymesh", "https://www.graphics.rwth-aachen.de:9000
 libraries.push(new Library("glfw", "https://github.com/glfw/glfw.git"));
 libraries.push(new Library("glow", "https://www.graphics.rwth-aachen.de:9000/Glow/glow.git"));
 libraries.push(new Library("glow-extras", "https://www.graphics.rwth-aachen.de:9000/Glow/glow-extras.git"));
+libraries.push(new Library("phantasm-renderer", "https://github.com/project-arcana/phantasm-renderer.git"));
+libraries.push(new Library("nexus", "https://github.com/project-arcana/nexus.git"));
+libraries.push(new Library("task-dispatcher", "https://github.com/project-arcana/task-dispatcher.git"));
+libraries.push(new Library("reflector", "https://github.com/project-arcana/reflector.git"));
+libraries.push(new Library("structured-interface", "https://github.com/project-arcana/structured-interface.git"));
+libraries.push(new Library("phantasm-viewer", "https://github.com/project-arcana/phantasm-viewer.git"));
+
 
 function add_dependency(name, dependency) {
     for (const lib of libraries) {
@@ -30,6 +39,7 @@ function add_dependency(name, dependency) {
 add_dependency("glow-extras", "glow");
 add_dependency("glow", "glfw");
 add_dependency("glow", "typed-geometry");
+add_dependency("phantasm-viewer", "phantasm-renderer");
 
 function get_lib(name) {
     for (const lib of libraries) {
