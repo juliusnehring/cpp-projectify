@@ -92,7 +92,7 @@ function setupCheckboxes() {
         checkbox.onclick = function () { onCheckboxClicked(this); };
         var label = document.createElement("label");
         label.setAttribute("for", cbId);
-        label.innerHTML = lib.name;
+        label.innerText = lib.name;
         container.appendChild(checkbox);
         container.appendChild(label);
         container.appendChild(document.createElement("br"));
@@ -114,7 +114,7 @@ function download(filename, text) {
 }
 
 function onGenerateCommandClicked() {
-    document.getElementById("generated_command").innerHTML = generate_command();
+    document.getElementById("generated_command").value = generate_command();
 }
 
 function depends_on(lib, dependee) {
@@ -184,7 +184,7 @@ function onGenerateButtonClick() {
     if (checkValidName(document.getElementById("project_name_text_field").value)) {
         var script = generate_script();
         var output = document.getElementById("output_textarea");
-        output.innerHTML = script;
+        output.value = script;
         copyToClipboard(script);
     }
 }
@@ -197,7 +197,7 @@ function decodeHtml(html) {
 
 function onCopyToClipboardClick() {
     var output = document.getElementById("output_textarea");
-    copyToClipboard(decodeHtml(output.innerHTML));
+    copyToClipboard(decodeHtml(output.value));
 }
 
 function contains(libraries, name) {
@@ -252,7 +252,7 @@ function generate_script() {
     script += "    echo >> $1\n";
     script += "    echo \"int main(int /* argc */, char * /* argv */ [])\" >> $1\n";
     script += "    echo \"{\" >> $1\n";
-    script += "    echo \"    std::cout << \\\"Hello World\!\\\" << std::endl;\" >> $1\n";
+    script += "    echo \"    std::cout << \\\"Hello World\\!\\\" << std::endl;\" >> $1\n";
     script += "    echo \"}\" >> $1\n";
     script += "}\n";
     script += "\n";
