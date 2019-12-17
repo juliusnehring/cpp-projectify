@@ -4,6 +4,8 @@ class Library {
         this.url = url;
         this.dependencies = [];
         this.checkbox == null;
+        this.projectPage = "www.google.de";
+        this.description = "This is an awesome library";
     }
 }
 
@@ -78,6 +80,64 @@ function onCheckboxClicked(cb) {
     else {
         disable_lib(name);
     }
+}
+
+function init() {
+    var container = document.getElementById("libraries_div");
+    var table = document.createElement("table");
+
+    var header = document.createElement("tr");
+    header.appendChild(document.createElement("th")); // checkbox
+    var header_name = document.createElement("th");
+    header_name.appendChild(document.createTextNode("Name"));
+    header.appendChild(header_name);
+    var header_description = document.createElement("th");
+    header_description.appendChild(document.createTextNode("Description"));
+    header.appendChild(header_description);
+    var header_project_url = document.createElement("th");
+    header_project_url.appendChild(document.createTextNode("Project Page"));
+    header.appendChild(header_project_url);
+    table.appendChild(header);
+
+    for (lib of libraries) {
+        var row = document.createElement("tr");
+        var checkbox_container = document.createElement("td");
+        var name_container = document.createElement("td");
+        var description_container = document.createElement("td");
+        var project_page_container = document.createElement("td");
+
+        var checkbox = document.createElement("input");
+        var cbId = lib.name + "Checkbox";
+        checkbox.id = cbId;
+        checkbox.type = "checkbox";
+        checkbox.textContent = lib.name;
+        lib.checkbox = checkbox;
+        checkbox.onclick = function () { onCheckboxClicked(this); };
+        
+        var label = document.createElement("label");
+        label.setAttribute("for", cbId);
+        label.innerText = lib.name;
+
+        var description = document.createTextNode(lib.description);
+
+        var project_page = document.createElement("a");
+        var link_text = document.createTextNode(lib.projectPage);
+        project_page.appendChild(link_text)
+        project_page.title = lib.projectPage;
+        project_page.href = lib.projectPage;
+
+        checkbox_container.appendChild(checkbox);
+        name_container.appendChild(label);
+        description_container.appendChild(description);
+        project_page_container.appendChild(project_page);
+
+        row.appendChild(checkbox_container);
+        row.appendChild(name_container);
+        row.appendChild(description_container);
+        row.appendChild(project_page_container);
+        table.appendChild(row);
+    }
+    container.appendChild(table);
 }
 
 function setupCheckboxes() {
@@ -423,5 +483,5 @@ function generate_script() {
 }
 
 window.onload = function () {
-    this.setupCheckboxes();
+    this.init();
 }
