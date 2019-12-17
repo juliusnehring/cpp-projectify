@@ -412,7 +412,7 @@ function generate_script() {
 
     script += "\n";
     script += "make_cmakelists \"CMakeLists.txt\"\n";
-    script += "touch \"README.MD\"\n";
+    script += "touch \"README.md\"\n";
     script += "mkdir \"extern\"\n";
     script += "mkdir \"src\"\n";
     script += "mkdir \"bin\"\n";
