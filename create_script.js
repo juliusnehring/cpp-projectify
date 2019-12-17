@@ -374,11 +374,11 @@ function generate_script() {
     else {
         script += "echo \"No git repository given. Init new repository?\"\n";
         script += "USER_INPUT=\"\"\n";
-        script += "while [ -z \"$USER_INPUT\" ] || \
-        { [ \"$USER_INPUT\" != \"YES\" ]\
-         && [ \"$USER_INPUT\" != \"Y\" ]\
-          && [ \"$USER_INPUT\" != \"NO\" ]\
-           && [ \"$USER_INPUT\" != \"N\" ] };\n";
+        script += "while [ -z \"$USER_INPUT\" ] || ";
+        script += "{ [ \"$USER_INPUT\" != \"YES\" ] ";
+        script += "&& [ \"$USER_INPUT\" != \"Y\" ] ";
+        script += "&& [ \"$USER_INPUT\" != \"NO\" ] ";
+        script += "&& [ \"$USER_INPUT\" != \"N\" ] };\n";
         script += "do\n";
         script += "    echo -n \"[yes/[no]]:\"\n";
         script += "    read USER_INPUT\n";
