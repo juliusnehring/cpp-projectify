@@ -414,6 +414,7 @@ function generate_script() {
     script += "\n";
     script += "make_cmakelists \"CMakeLists.txt\"\n";
     script += "touch \"README.md\"\n";
+    script += "wget -q \"https://raw.githubusercontent.com/lightwalk/cpp-projectify/master/data/.clang-format\"";
     script += "mkdir \"extern\"\n";
     script += "mkdir \"src\"\n";
     script += "mkdir \"bin\"\n";
