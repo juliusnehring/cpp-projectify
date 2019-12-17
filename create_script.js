@@ -112,6 +112,7 @@ function init() {
         checkbox.type = "checkbox";
         checkbox.textContent = lib.name;
         lib.checkbox = checkbox;
+        checkbox.value = lib.name;
         checkbox.onclick = function () { onCheckboxClicked(this); };
         
         var label = document.createElement("label");
