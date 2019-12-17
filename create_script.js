@@ -243,19 +243,6 @@ function generate_script() {
 
     script += "#!/bin/bash\n";
     script += "project_name=" + projectName + "\n";
-    script += "source_folder_name=src\n";
-
-    script += "\n";
-    script += "submodule_urls=(\n"
-    for (const lib of enabledLibs) {
-        script += lib.url + " \n";
-    }
-    script += ")\n";
-    script += "submodule_names=(\n";
-    for (const lib of enabledLibs) {
-        script += lib.name + " \n";
-    }
-    script += ")\n";
     script += "\n";
     script += "# takes a path to where main should lie\n";
     script += "function make_main\n";
@@ -272,7 +259,7 @@ function generate_script() {
     script += "{\n";
     script += "    # header\n";
     script += "    echo cmake_minimum_required\\(VERSION 3.8\\) > $1\n";
-    script += "    echo project\\($project_name\\) >> $1\n";
+    script += "    echo project\\(" + projectName + "\\) >> $1\n";
     script += "    echo >> $1\n";
     script += "    echo \"# ===============================================\" >> $1\n";
     script += "    echo \\\# Global settings >> $1\n";
@@ -305,9 +292,9 @@ function generate_script() {
     script += "\n";
     script += "    echo \"# ===============================================\" >> $1\n";
     script += "    echo \\\# add submodules >> $1\n";
-    script += "    for name in ${submodule_names[*]}; do\n";
-    script += "        echo add_subdirectory\\(extern/$name\\) >> $1\n";
-    script += "    done\n";
+    for (const lib of enabledLibs) {
+        script += "    echo add_subdirectory\\(extern/" + lib.name + "\\) >> $1\n";
+    }
     script += "\n";
     script += "    echo >> $1\n";
     script += "    echo \"# ===============================================\" >> $1\n";
@@ -372,7 +359,7 @@ function generate_script() {
     script += "\n";
 
     // check if directory already exists
-    script += "if [ -d \"$project_name\" ]; then\n";
+    script += "if [ -d \"" + projectName + "\" ]; then\n";
     script += "    echo Directory " + projectName + " already exists!\n";
     script += "    return 1\n";
     script += "fi\n";
@@ -424,11 +411,9 @@ function generate_script() {
     script += "git init\n";
     script += "\n";
     script += "cd \"extern\"\n";
-    script += "len=${#submodule_urls[@]}\n";
-    script += "for (( i=0; i<$len; i++ )); do\n";
-    // script += "for url in ${submodule_urls[*]}; do\n";
-    script += "    git submodule add ${submodule_urls[$i]} ${submodule_names[$i]}\n";
-    script += "done\n";
+    for (const lib of enabledLibs) {
+        script += "git submodule add " + lib.url + " " + lib.name + "\n";
+    }
     script += "cd ..\n";
     script += "\n";
     script += "git submodule update --init --recursive\n";
