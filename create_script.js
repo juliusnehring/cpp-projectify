@@ -210,6 +210,7 @@ function contains(libraries, name) {
 
 function nameFromGitUrl(url) {
     if (!checkValidGitUrl(url)) {
+        window.alert("Not a valid git url!");
         return null;
     }
     var name = "";
@@ -379,7 +380,6 @@ function generate_script() {
           && [ \"$USER_INPUT\" != \"NO\" ]\
            && [ \"$USER_INPUT\" != \"N\" ] };\n";
         script += "do\n";
-        script += "echo $USER_INPUT\n"; // debug
         script += "    echo -n \"[yes/[no]]:\"\n";
         script += "    read USER_INPUT\n";
         script += "    if [ -z \"$USER_INPUT\" ]; then\n";
