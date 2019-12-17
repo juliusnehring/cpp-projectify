@@ -420,6 +420,7 @@ function generate_script() {
     script += "\n";
     script += "# move back up\n";
     script += "cd ..\n";
+    script += "echo DONE!\n";
     return script;
 }
 
