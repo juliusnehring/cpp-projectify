@@ -163,7 +163,7 @@ const copyToClipboard = str => {
 
 function checkValidGitUrl(url) {
     // extremely simple test for now:
-    return (url.startswith("git://") || url.startswith("git@") || url.startswith("https://")) && url.endswith(".git");
+    return (url.startsWith("git://") || url.startsWith("git@") || url.startsWith("https://")) && url.endsWith(".git");
 }
 
 function checkValidName(name) {
