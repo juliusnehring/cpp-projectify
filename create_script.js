@@ -252,7 +252,7 @@ function generate_script() {
     script += "    echo >> $1\n";
     script += "    echo \"int main(int /* argc */, char * /* argv */ [])\" >> $1\n";
     script += "    echo \"{\" >> $1\n";
-    script += "    echo \"    std::cout << \\\"Hello World\\\" << std::endl;\" >> $1\n";
+    script += "    echo \"    std::cout << \\\"Hello World!\\\" << std::endl;\" >> $1\n";
     script += "    echo \"}\" >> $1\n";
     script += "}\n";
     script += "\n";
