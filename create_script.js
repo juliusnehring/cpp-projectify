@@ -11,13 +11,16 @@ class Library
 
 var libraries = [];
 
+// make sure the order in which these are pushed into the array is sensible!
+
+libraries.push(new Library("imgui-lean","https://www.graphics.rwth-aachen.de:9000/ptrettner/imgui-lean.git"));
+libraries.push(new Library("ctracer","https://www.graphics.rwth-aachen.de:9000/ptrettner/ctracer.git"));
+libraries.push(new Library("polymesh","https://www.graphics.rwth-aachen.de:9000/ptrettner/polymesh.git"));
 libraries.push(new Library("glfw","https://github.com/glfw/glfw.git"));
 libraries.push(new Library("glow","https://www.graphics.rwth-aachen.de:9000/Glow/glow.git"));
 libraries.push(new Library("glow-extras","https://www.graphics.rwth-aachen.de:9000/Glow/glow-extras.git"));
 libraries.push(new Library("typed-geometry","https://www.graphics.rwth-aachen.de:9000/ptrettner/typed-geometry.git"));
-libraries.push(new Library("polymesh","https://www.graphics.rwth-aachen.de:9000/ptrettner/polymesh.git"));
-libraries.push(new Library("imgui-lean","https://www.graphics.rwth-aachen.de:9000/ptrettner/imgui-lean.git"));
-libraries.push(new Library("ctracer","https://www.graphics.rwth-aachen.de:9000/ptrettner/ctracer.git"));
+
 
 function add_dependency(name, dependency)
 {
@@ -248,7 +251,7 @@ function generate_script()
     script += "project_name=" + projectName + "\n";
     script += "project_folder_name=" + projectFolder+ "\n";
     script += "source_folder_name=src\n";
-    script += "is_libary=false\n";
+    script += "is_library=false\n";
     script += "\n";
     script += "submodule_urls=(\n"
     for(const lib of enabledLibs)
@@ -297,13 +300,16 @@ function generate_script()
     script += "    echo else\\(\\) >> $1\n";
     script += "    echo \"    \" set\\(BIN_DIR \\\${CMAKE_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE}\\) >> $1\n";
     script += "    echo endif\\(\\) >> $1\n";
+    script += "    echo >> $1\n";
+
     script += "    echo set\\(CMAKE_RUNTIME_OUTPUT_DIRECTORY \\\${BIN_DIR}\\) >> $1\n";
     script += "    echo set\\(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE \\\${BIN_DIR}\\) >> $1\n";
     script += "    echo set\\(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELWITHDEBINFO \\\${BIN_DIR}\\) >> $1\n";
     script += "    echo set\\(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG \\\${BIN_DIR}\\) >> $1\n";
     if(contains(enabledLibs, "glow"))
     {
-        script += "    echo set\\(GLOW_BIN_DIR ${CMAKE_SOURCE_DIR}/bin\\) >> $1\n";
+        script += "    echo set\\(GLOW_BIN_DIR \\\${CMAKE_SOURCE_DIR}/bin\\) >> $1\n";
+        script += "    echo >> $1\n";
     }
 
     script += "\n";
@@ -344,6 +350,7 @@ function generate_script()
         script += "    echo option\\(GLFW_BUILD_TESTS \\\"\\\" OFF\\) >> $1\n";
         script += "    echo option\\(GLFW_BUILD_DOCS \\\"\\\" OFF\\) >> $1\n";
         script += "    echo option\\(GLFW_INSTALL \\\"\\\" OFF\\) >> $1\n";
+        script += "    echo >> $1\n";
         script += "\n";
     }
     
@@ -385,7 +392,7 @@ function generate_script()
     script += "mkdir \"src\"\n";
     script += "mkdir \"bin\"\n";
     script += "\n";
-    script += "if $is_libary; then\n";
+    script += "if $is_library; then\n";
     script += "    mkdir \"src/$project_folder_name\"\n";
     script += "    mkdir \"test\"\n";
     script += "    make_main \"test/main.cc\"\n";
