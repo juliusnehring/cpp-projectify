@@ -1,11 +1,11 @@
 class Library {
-    constructor(name, url) {
+    constructor(name, url, description, projectPage) {
         this.name = name;
         this.url = url;
         this.dependencies = [];
         this.checkbox == null;
-        this.projectPage = "http://www.google.com";
-        this.description = "This is an awesome library";
+        this.projectPage = projectPage;
+        this.description = description;
     }
 }
 
@@ -13,21 +13,82 @@ var libraries = [];
 
 // make sure the order in which these are pushed into the array is sensible!
 
-libraries.push(new Library("clean-core", "https://github.com/project-arcana/clean-core.git"));
-libraries.push(new Library("rich-log", "https://github.com/project-arcana/rich-log.git"));
-libraries.push(new Library("ctracer", "https://www.graphics.rwth-aachen.de:9000/ptrettner/ctracer.git"));
-libraries.push(new Library("typed-geometry", "https://www.graphics.rwth-aachen.de:9000/ptrettner/typed-geometry.git"));
-libraries.push(new Library("polymesh", "https://www.graphics.rwth-aachen.de:9000/ptrettner/polymesh.git"));
-libraries.push(new Library("glfw", "https://github.com/glfw/glfw.git"));
-libraries.push(new Library("glow", "https://www.graphics.rwth-aachen.de:9000/Glow/glow.git"));
-libraries.push(new Library("imgui", "https://www.graphics.rwth-aachen.de:9000/ptrettner/imgui-lean.git"));
-libraries.push(new Library("glow-extras", "https://www.graphics.rwth-aachen.de:9000/Glow/glow-extras.git"));
-libraries.push(new Library("phantasm-renderer", "https://github.com/project-arcana/phantasm-renderer.git"));
-libraries.push(new Library("nexus", "https://github.com/project-arcana/nexus.git"));
-libraries.push(new Library("task-dispatcher", "https://github.com/project-arcana/task-dispatcher.git"));
-libraries.push(new Library("reflector", "https://github.com/project-arcana/reflector.git"));
-libraries.push(new Library("structured-interface", "https://github.com/project-arcana/structured-interface.git"));
-libraries.push(new Library("phantasm-viewer", "https://github.com/project-arcana/phantasm-viewer.git"));
+libraries.push(new Library(
+    "clean-core",
+    "https://github.com/project-arcana/clean-core.git",
+    "Lean reimagined standard library.",
+    "https://github.com/project-arcana/clean-core"));
+libraries.push(new Library(
+    "rich-log", 
+    "https://github.com/project-arcana/rich-log.git",
+    "Low-overhead versatile C++ rich logging library.",
+    "https://github.com/project-arcana/rich-log"));
+libraries.push(new Library(
+    "ctracer",
+    "https://www.graphics.rwth-aachen.de:9000/ptrettner/ctracer.git",
+    "Fast, cycle based tracing library.",
+    "https://graphics.rwth-aachen.de:9000/ptrettner/ctracer"));
+libraries.push(new Library(
+    "typed-geometry", 
+    "https://www.graphics.rwth-aachen.de:9000/ptrettner/typed-geometry.git",
+    "Header-only strongly typed math library for graphics and geometry.",
+    "https://graphics.rwth-aachen.de:9000/ptrettner/typed-geometry"
+    ));
+libraries.push(new Library(
+    "polymesh",
+    "https://www.graphics.rwth-aachen.de:9000/ptrettner/polymesh.git",
+    "A C++17 easy-to-use high-performance half-edge data structure with strong functional features.",
+    "https://graphics.rwth-aachen.de:9000/ptrettner/polymesh"));
+libraries.push(new Library(
+    "glfw", 
+    "https://github.com/glfw/glfw.git",
+    "Multiplatform OpenGL library.",
+    "https://www.glfw.org/"));
+libraries.push(new Library(
+    "glow",
+     "https://www.graphics.rwth-aachen.de:9000/Glow/glow.git",
+    "OpenGL Object-oriented Wrapper.",
+    "https://graphics.rwth-aachen.de:9000/Glow/glow"));
+libraries.push(new Library(
+    "imgui",
+    "https://www.graphics.rwth-aachen.de:9000/ptrettner/imgui-lean.git",
+    "Dear ImGui is a bloat-free graphical user interface library for C++.",
+    "https://github.com/ocornut/imgui"));
+libraries.push(new Library(
+    "glow-extras",
+    "https://www.graphics.rwth-aachen.de:9000/Glow/glow-extras.git",
+    "Companion library for glow with convenience and helper functions. Separated into mostly independent sub-libraries.",
+    "https://graphics.rwth-aachen.de:9000/Glow/glow-extras"));
+libraries.push(new Library(
+    "phantasm-renderer",
+    "https://github.com/project-arcana/phantasm-renderer.git",
+    "Modern immediate-style high-productivity C++ renderer based on Vulkan/DX12.",
+    "https://github.com/project-arcana/phantasm-renderer"));
+libraries.push(new Library(
+    "nexus", 
+    "https://github.com/project-arcana/nexus.git",
+    "C++ library for tests (unit, fuzz, property), benchmarks, apps.",
+    "https://github.com/project-arcana/nexus"));
+libraries.push(new Library(
+    "task-dispatcher", 
+    "https://github.com/project-arcana/task-dispatcher.git",
+    "High-performance intuitive task-based concurrency framework with fiber support.",
+    "https://github.com/project-arcana/task-dispatcher"));
+libraries.push(new Library(
+    "reflector", 
+    "https://github.com/project-arcana/reflector.git",
+    "Non-intrusive high-performance versatile reflection and introspection library for C++.",
+    "https://github.com/project-arcana/reflector"));
+libraries.push(new Library(
+    "structured-interface", 
+    "https://github.com/project-arcana/structured-interface.git",
+    "Structured immediate-mode production-quality UI.",
+    "https://github.com/project-arcana/structured-interface"));
+libraries.push(new Library(
+    "phantasm-viewer", 
+    "https://github.com/project-arcana/phantasm-viewer.git",
+    "Render-anywhere viewer that scales from one-line debug views to full applications.",
+    "https://github.com/project-arcana/phantasm-viewer"));
 
 
 function add_dependency(name, dependency) {
