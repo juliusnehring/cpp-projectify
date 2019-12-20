@@ -106,6 +106,7 @@ add_dependency("glow", "typed-geometry");
 add_dependency("phantasm-viewer", "phantasm-renderer");
 add_dependency("nexus", "clean-core");
 add_dependency("nexus", "ctracer");
+add_dependency("nexus", "typed-geometry");
 
 function get_lib(name) {
     for (const lib of libraries) {
