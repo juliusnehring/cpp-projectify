@@ -150,7 +150,7 @@ def setup_project(args):
 
         if(choice == "no" or choice == "n"):
             print("Aborting!")
-            return
+            return 1
 
         os.mkdir(project_name)
         call(["git", "-C", project_name, "init"])
