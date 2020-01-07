@@ -2,7 +2,7 @@ import argparse
 import urllib.request
 import json
 import os.path
-import subprocess
+from subprocess import call
 from pathlib import Path
 
 
@@ -140,7 +140,7 @@ def setup_project(args):
         return
 
     if(project_url):
-        subprocess.Popen(["git", "clone", project_url, project_name])
+        call(["git", "clone", project_url, project_name])
     else:
         print("No git repository given. Init new repository?")
 
@@ -153,7 +153,7 @@ def setup_project(args):
             return
 
         os.mkdir(project_name)
-        subprocess.Popen(["git", "-C", project_name, "init"])
+        call(["git", "-C", project_name, "init"])
 
     create_cmakelists(os.path.join(
         project_name, "CMakeLists.txt"), project_name, enabled_libs)
@@ -170,10 +170,10 @@ def setup_project(args):
     create_main(os.path.join(project_name, 'src', 'main.cc'))
 
     for lib in enabled_libs:
-        subprocess.Popen(["git", "-C", os.path.join(project_name,
+        call(["git", "-C", os.path.join(project_name,
                                                     "extern"), "submodule", "add", lib.git_url, lib.name])
 
-    subprocess.Popen(["git", "-C", project_name, "submodule",
+    call(["git", "-C", project_name, "submodule",
                       "update", "--init", "--recursive"])
 
     print("DONE!")
