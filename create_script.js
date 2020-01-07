@@ -378,7 +378,7 @@ function generate_script() {
     script += '    echo >> $1\n';
     script += '    echo "int main(int /* argc */, char * /* argv */ [])" >> $1\n';
     script += '    echo "{" >> $1\n';
-    script += '    echo "    std::cout << \\"Hello World\\!\\" << std::endl;" >> $1\n';
+    script += '    echo "    std::cout << \\"Hello World!\\" << std::endl;" >> $1\n';
     script += '    echo "}" >> $1\n';
     script += '}\n';
     script += '\n';
@@ -503,7 +503,7 @@ function generate_script() {
         script += '{ [ "$USER_INPUT" != "YES" ] ';
         script += '&& [ "$USER_INPUT" != "Y" ] ';
         script += '&& [ "$USER_INPUT" != "NO" ] ';
-        script += '&& [ "$USER_INPUT" != "N" ] };\n';
+        script += '&& [ "$USER_INPUT" != "N" ]; };\n';
         script += 'do\n';
         script += '    echo -n "[yes/[no]]:"\n';
         script += '    read USER_INPUT\n';
