@@ -19,6 +19,7 @@ def load_libraries():
             libraries.append(Library(lib))
         return libraries
 
+
 def create_main(filepath):
     with open(filepath, "w") as f:
         f.write('#include <iostream>\n\n')
@@ -27,40 +28,43 @@ def create_main(filepath):
         f.write('    std::cout << "Hello World!" << std::endl;\n')
         f.write('}\n')
 
+
 def create_cmakelists(filepath, project_name, enabled_libraries):
     with open(filepath, "w") as f:
+        # HEADER
         f.write('cmake_minimum_required(VERSION 3.8)\n')
         f.write('project(' + project_name + ')\n')
         f.write("\n")
+        f.write('# ===============================================\n')
+        f.write('# Global settings\n')
+        f.write('set(CMAKE_CXX_STANDARD 17)\n')
+        f.write('set(CMAKE_CXX_STANDARD_REQUIRED ON)\n')
+        f.write('set_property(GLOBAL PROPERTY USE_FOLDERS ON)\n')
+        f.write('\n')
+        f.write('# ===============================================\n')
+        f.write('# Bin dir\n')
+        f.write('if(MSVC)\n')
+        f.write('    set(BIN_DIR ${CMAKE_SOURCE_DIR}/bin)\n')
+        f.write('elseif(CMAKE_BUILD_TYPE STREQUAL "")\n')
+        f.write('    set(BIN_DIR ${CMAKE_SOURCE_DIR}/bin/Default)\n')
+        f.write('else()\n')
         f.write(
-            """# ===============================================
-# Global settings
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+            '    set(BIN_DIR ${CMAKE_SOURCE_DIR}/bin ${CMAKE_BUILD_TYPE})\n')
+        f.write('endif()\n')
+        f.write('set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${BIN_DIR})\n')
+        f.write('set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${BIN_DIR})\n')
+        f.write(
+            'set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELWITHDEBINFO ${BIN_DIR})\n')
+        f.write('set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${BIN_DIR})\n')
 
-# ===============================================
-# Bin dir
-if(MSVC)
-    set(BIN_DIR ${CMAKE_SOURCE_DIR}/bin)
-elseif(CMAKE_BUILD_TYPE STREQUAL "")
-    set(BIN_DIR ${CMAKE_SOURCE_DIR}/bin/Default)
-else()
-    set(BIN_DIR ${CMAKE_SOURCE_DIR}/bin ${CMAKE_BUILD_TYPE})
-endif()
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${BIN_DIR})
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${BIN_DIR})
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELWITHDEBINFO ${BIN_DIR})
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${BIN_DIR})
-""")
-
+        # GLOW needs a special bin directory
         if any(lib.name == "glow" for lib in enabled_libraries):
             f.write("set(GLOW_BIN_DIR ${CMAKE_SOURCE_DIR}/bin)\n")
 
+        # Add the submodules
         f.write("\n")
         f.write("# ===============================================\n")
         f.write("# add submodules\n")
-
         for lib in enabled_libraries:
             f.write('add_subdirectory(extern/' + lib.name + ')\n')
 
@@ -163,7 +167,7 @@ def setup_project(args):
     os.mkdir(os.path.join(project_name, "src"))
     os.mkdir(os.path.join(project_name, "bin"))
 
-    create_main(os.path.join(project_name, 'src','main.cc'))
+    create_main(os.path.join(project_name, 'src', 'main.cc'))
 
     for lib in enabled_libs:
         subprocess.Popen(["git", "-C", os.path.join(project_name,
