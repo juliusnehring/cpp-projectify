@@ -1,112 +1,52 @@
 class Library {
-    constructor(name, url, description, projectPage) {
+    constructor(name, url, description, projectPage, dependencies) {
         this.name = name;
         this.url = url;
-        this.dependencies = [];
+        this.dependencies = dependencies;
         this.checkbox == null;
         this.projectPage = projectPage;
         this.description = description;
     }
 }
 
-var libraries = [];
-
-// make sure the order in which these are pushed into the array is sensible!
-
-libraries.push(new Library(
-    "clean-core",
-    "https://github.com/project-arcana/clean-core.git",
-    "Lean reimagined standard library.",
-    "https://github.com/project-arcana/clean-core"));
-libraries.push(new Library(
-    "rich-log",
-    "https://github.com/project-arcana/rich-log.git",
-    "Low-overhead versatile C++ rich logging library.",
-    "https://github.com/project-arcana/rich-log"));
-libraries.push(new Library(
-    "ctracer",
-    "https://www.graphics.rwth-aachen.de:9000/ptrettner/ctracer.git",
-    "Fast, cycle based tracing library.",
-    "https://graphics.rwth-aachen.de:9000/ptrettner/ctracer"));
-libraries.push(new Library(
-    "typed-geometry",
-    "https://www.graphics.rwth-aachen.de:9000/ptrettner/typed-geometry.git",
-    "Header-only strongly typed math library for graphics and geometry.",
-    "https://graphics.rwth-aachen.de:9000/ptrettner/typed-geometry"
-));
-libraries.push(new Library(
-    "polymesh",
-    "https://www.graphics.rwth-aachen.de:9000/ptrettner/polymesh.git",
-    "A C++17 easy-to-use high-performance half-edge data structure with strong functional features.",
-    "https://graphics.rwth-aachen.de:9000/ptrettner/polymesh"));
-libraries.push(new Library(
-    "glfw",
-    "https://github.com/glfw/glfw.git",
-    "Multiplatform OpenGL library.",
-    "https://www.glfw.org/"));
-libraries.push(new Library(
-    "glow",
-    "https://www.graphics.rwth-aachen.de:9000/Glow/glow.git",
-    "OpenGL Object-oriented Wrapper.",
-    "https://graphics.rwth-aachen.de:9000/Glow/glow"));
-libraries.push(new Library(
-    "imgui",
-    "https://www.graphics.rwth-aachen.de:9000/ptrettner/imgui-lean.git",
-    "Dear ImGui is a bloat-free graphical user interface library for C++.",
-    "https://github.com/ocornut/imgui"));
-libraries.push(new Library(
-    "glow-extras",
-    "https://www.graphics.rwth-aachen.de:9000/Glow/glow-extras.git",
-    "Companion library for glow with convenience and helper functions. Separated into mostly independent sub-libraries.",
-    "https://graphics.rwth-aachen.de:9000/Glow/glow-extras"));
-libraries.push(new Library(
-    "phantasm-renderer",
-    "https://github.com/project-arcana/phantasm-renderer.git",
-    "Modern immediate-style high-productivity C++ renderer based on Vulkan/DX12.",
-    "https://github.com/project-arcana/phantasm-renderer"));
-libraries.push(new Library(
-    "task-dispatcher",
-    "https://github.com/project-arcana/task-dispatcher.git",
-    "High-performance intuitive task-based concurrency framework with fiber support.",
-    "https://github.com/project-arcana/task-dispatcher"));
-libraries.push(new Library(
-    "reflector",
-    "https://github.com/project-arcana/reflector.git",
-    "Non-intrusive high-performance versatile reflection and introspection library for C++.",
-    "https://github.com/project-arcana/reflector"));
-libraries.push(new Library(
-    "structured-interface",
-    "https://github.com/project-arcana/structured-interface.git",
-    "Structured immediate-mode production-quality UI.",
-    "https://github.com/project-arcana/structured-interface"));
-libraries.push(new Library(
-    "phantasm-viewer",
-    "https://github.com/project-arcana/phantasm-viewer.git",
-    "Render-anywhere viewer that scales from one-line debug views to full applications.",
-    "https://github.com/project-arcana/phantasm-viewer"));
-libraries.push(new Library(
-    "nexus",
-    "https://github.com/project-arcana/nexus.git",
-    "C++ library for tests (unit, fuzz, property), benchmarks, apps.",
-    "https://github.com/project-arcana/nexus"));
-
-function add_dependency(name, dependency) {
-    for (const lib of libraries) {
-        if (lib.name == name) {
-            lib.dependencies.push(dependency);
+var getJSON = function (url, callback) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', url, true);
+    xhr.responseType = 'json';
+    xhr.onload = function () {
+        var status = xhr.status;
+        if (status === 200) {
+            callback(null, xhr.response);
+        } else {
+            callback(status, xhr.response);
         }
-    }
+    };
+    xhr.send();
+};
+
+function load_libraries(callback) {
+    var url = "https://raw.githubusercontent.com/lightwalk/cpp-projectify/master/libraries.json";
+    output = [];
+    getJSON(url, function (err, libs) {
+        if (err !== null) {
+            console.log("something went wrong " + err);
+        }
+        else {
+            for (const lib of libs.libraries) {
+                output.push(new Library(
+                    lib.name,
+                    lib.git_url,
+                    lib.description,
+                    lib.project_url,
+                    lib.dependencies
+                ));
+            }
+            callback(output);
+        }
+    });
 }
 
-add_dependency("glow-extras", "glow");
-add_dependency("glow-extras", "imgui");
-add_dependency("glow", "glfw");
-add_dependency("glow", "typed-geometry");
-add_dependency("phantasm-viewer", "phantasm-renderer");
-add_dependency("nexus", "clean-core");
-add_dependency("nexus", "ctracer");
-add_dependency("nexus", "typed-geometry");
-add_dependency("reflector", "clean-core");
+var libraries = [];
 
 function get_lib(name) {
     for (const lib of libraries) {
@@ -147,64 +87,69 @@ function onCheckboxClicked(cb) {
 }
 
 function init() {
-    var container = document.getElementById("libraries_div");
-    var table = document.createElement("table");
+    load_libraries(
+        function (libs) {
+            libraries = libs;
+            var container = document.getElementById("libraries_div");
+            var table = document.createElement("table");
 
-    var header = document.createElement("tr");
-    header.appendChild(document.createElement("th")); // checkbox
-    var header_name = document.createElement("th");
-    header_name.appendChild(document.createTextNode("Name"));
-    header.appendChild(header_name);
-    var header_description = document.createElement("th");
-    header_description.appendChild(document.createTextNode("Description"));
-    header.appendChild(header_description);
-    var header_project_url = document.createElement("th");
-    header_project_url.appendChild(document.createTextNode("Project Page"));
-    header.appendChild(header_project_url);
-    table.appendChild(header);
+            var header = document.createElement("tr");
+            header.appendChild(document.createElement("th")); // checkbox
+            var header_name = document.createElement("th");
+            header_name.appendChild(document.createTextNode("Name"));
+            header.appendChild(header_name);
+            var header_description = document.createElement("th");
+            header_description.appendChild(document.createTextNode("Description"));
+            header.appendChild(header_description);
+            var header_project_url = document.createElement("th");
+            header_project_url.appendChild(document.createTextNode("Project Page"));
+            header.appendChild(header_project_url);
+            table.appendChild(header);
 
-    for (lib of libraries) {
-        var row = document.createElement("tr");
-        var checkbox_container = document.createElement("td");
-        var name_container = document.createElement("td");
-        var description_container = document.createElement("td");
-        var project_page_container = document.createElement("td");
+            for (lib of libraries) {
+                var row = document.createElement("tr");
+                var checkbox_container = document.createElement("td");
+                var name_container = document.createElement("td");
+                var description_container = document.createElement("td");
+                var project_page_container = document.createElement("td");
 
-        var checkbox = document.createElement("input");
-        var cbId = lib.name + "Checkbox";
-        checkbox.id = cbId;
-        checkbox.type = "checkbox";
-        checkbox.textContent = lib.name;
-        lib.checkbox = checkbox;
-        checkbox.value = lib.name;
-        checkbox.onclick = function () { onCheckboxClicked(this); };
+                var checkbox = document.createElement("input");
+                var cbId = lib.name + "Checkbox";
+                checkbox.id = cbId;
+                checkbox.type = "checkbox";
+                checkbox.textContent = lib.name;
+                lib.checkbox = checkbox;
+                checkbox.value = lib.name;
+                checkbox.onclick = function () { onCheckboxClicked(this); };
 
-        var label = document.createElement("label");
-        label.setAttribute("for", cbId);
-        label.innerText = lib.name;
+                var label = document.createElement("label");
+                label.setAttribute("for", cbId);
+                label.innerText = lib.name;
 
-        var description = document.createTextNode(lib.description);
+                var description = document.createTextNode(lib.description);
 
-        var project_page = document.createElement("a");
-        var link_text = document.createTextNode(lib.projectPage.replace(/(^\w+:|^)\/\//, ''));
-        project_page.appendChild(link_text)
-        project_page.title = lib.projectPage;
-        project_page.title = lib.projectPage;
-        project_page.href = lib.projectPage;
-        project_page.setAttribute("target", "_blank");
+                var project_page = document.createElement("a");
+                var link_text = document.createTextNode(lib.projectPage.replace(/(^\w+:|^)\/\//, ''));
+                project_page.appendChild(link_text)
+                project_page.title = lib.projectPage;
+                project_page.title = lib.projectPage;
+                project_page.href = lib.projectPage;
+                project_page.setAttribute("target", "_blank");
 
-        checkbox_container.appendChild(checkbox);
-        name_container.appendChild(label);
-        description_container.appendChild(description);
-        project_page_container.appendChild(project_page);
+                checkbox_container.appendChild(checkbox);
+                name_container.appendChild(label);
+                description_container.appendChild(description);
+                project_page_container.appendChild(project_page);
 
-        row.appendChild(checkbox_container);
-        row.appendChild(name_container);
-        row.appendChild(description_container);
-        row.appendChild(project_page_container);
-        table.appendChild(row);
-    }
-    container.appendChild(table);
+                row.appendChild(checkbox_container);
+                row.appendChild(name_container);
+                row.appendChild(description_container);
+                row.appendChild(project_page_container);
+                table.appendChild(row);
+            }
+            container.appendChild(table);
+        }
+    );
 }
 
 function setupCheckboxes() {
