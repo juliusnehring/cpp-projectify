@@ -314,183 +314,18 @@ function generate_script() {
     var projectUrl = document.getElementById("git_repository_text_field").value;
     var enabledLibs = getEnabledLibraries();
 
-    script += '#!/bin/bash\n';
-    script += '\n';
-    script += '# takes a path to where main should lie\n';
-    script += 'function make_main\n';
-    script += '{\n';
-    script += '    echo "#include <iostream>" > $1\n';
-    script += '    echo >> $1\n';
-    script += '    echo "int main(int /* argc */, char * /* argv */ [])" >> $1\n';
-    script += '    echo "{" >> $1\n';
-    script += '    echo "    std::cout << \\"Hello World!\\" << std::endl;" >> $1\n';
-    script += '    echo "}" >> $1\n';
-    script += '}\n';
-    script += '\n';
-
-    script += 'function make_cmakelists \n';
-    script += '{\n';
-    script += '    # header\n';
-    script += '    echo cmake_minimum_required\\(VERSION 3.8\\) > $1\n';
-    script += '    echo project\\(' + projectName + '\\) >> $1\n';
-    script += '    echo >> $1\n';
-    script += '    echo "# ===============================================" >> $1\n';
-    script += '    echo \\\# Global settings >> $1\n';
-    script += '    echo >> $1\n';
-    script += '    echo set\\(CMAKE_CXX_STANDARD 17\\) >> $1\n';
-    script += '    echo set\\(CMAKE_CXX_STANDARD_REQUIRED ON\\) >> $1\n';
-    script += '    echo set_property\\(GLOBAL PROPERTY USE_FOLDERS ON\\) >> $1\n';
-    script += '    echo >> $1\n';
-    script += '    echo "# ===============================================" >> $1\n';
-    script += '    echo \\\# Bin dir >> $1\n';
-
-    script += '    echo if\\(MSVC\\) >> $1\n';
-    script += '    echo "    " set\\(BIN_DIR \\\${CMAKE_SOURCE_DIR}/bin\\) >> $1\n';
-    script += '    echo elseif\\(CMAKE_BUILD_TYPE STREQUAL \\"\\"\\) >> $1\n';
-    script += '    echo "    " set\\(BIN_DIR \\\${CMAKE_SOURCE_DIR}/bin/Default\\) >> $1\n';
-    script += '    echo else\\(\\) >> $1\n';
-    script += '    echo "    " set\\(BIN_DIR \\\${CMAKE_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE}\\) >> $1\n';
-    script += '    echo endif\\(\\) >> $1\n';
-    script += '    echo >> $1\n';
-
-    script += '    echo set\\(CMAKE_RUNTIME_OUTPUT_DIRECTORY \\\${BIN_DIR}\\) >> $1\n';
-    script += '    echo set\\(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE \\\${BIN_DIR}\\) >> $1\n';
-    script += '    echo set\\(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELWITHDEBINFO \\\${BIN_DIR}\\) >> $1\n';
-    script += '    echo set\\(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG \\\${BIN_DIR}\\) >> $1\n';
-    if (contains(enabledLibs, "glow")) {
-        script += '    echo set\\(GLOW_BIN_DIR \\\${CMAKE_SOURCE_DIR}/bin\\) >> $1\n';
-        script += '    echo >> $1\n';
-    }
-
-    script += '\n';
-    script += '    echo "# ===============================================" >> $1\n';
-    script += '    echo \\\# add submodules >> $1\n';
-    for (const lib of enabledLibs) {
-        script += '    echo add_subdirectory\\(extern/' + lib.name + '\\) >> $1\n';
-    }
-    script += '\n';
-    script += '    echo >> $1\n';
-    script += '    echo "# ===============================================" >> $1\n';
-    script += '    echo \\\# Configure executable >> $1\n';
-    script += '\n';
-    script += '    # do evil glob\n';
-    script += '    echo file\\(GLOB_RECURSE SOURCES >> $1\n';
-    script += '    echo "    \\"src/*.cc\\"" >> $1\n';
-    script += '    echo "    \\"src/*.hh\\"" >> $1\n';
-    script += '    echo "    \\"src/*.cpp\\"" >> $1\n';
-    script += '    echo "    \\"src/*.h\\"" >> $1\n';
-    script += '    echo \\) >> $1\n';
-    script += '    echo >> $1\n';
-    script += '    \n';
-    script += '    echo \\\# group sources according to folder structure >> $1\n';
-    script += '    echo source_group\\(TREE \\${CMAKE_CURRENT_SOURCE_DIR} FILES \\${SOURCES}\\) >> $1\n';
-    script += '    echo >> $1\n';
-    script += '    \n';
-    script += '    echo "# ===============================================" >> $1\n';
-    script += '    echo \\\# Make executable >> $1\n';
-    script += '    echo add_executable\\(\\${PROJECT_NAME} \\${SOURCES}\\) >> $1\n';
-    script += '    echo >> $1\n';
-    script += '\n';
-    if (contains(enabledLibs, "glfw")) {
-        script += '    echo "# ===============================================" >> $1\n';
-        script += '    echo \\\# Mute some GLWF warnigns >> $1\n';
-        script += '    echo option\\(GLFW_BUILD_EXAMPLES \\"\\" OFF\\) >> $1\n';
-        script += '    echo option\\(GLFW_BUILD_TESTS \\"\\" OFF\\) >> $1\n';
-        script += '    echo option\\(GLFW_BUILD_DOCS \\"\\" OFF\\) >> $1\n';
-        script += '    echo option\\(GLFW_INSTALL \\"\\" OFF\\) >> $1\n';
-        script += '    echo >> $1\n';
-        script += '\n';
-    }
-
-    script += '    echo "# ===============================================" >> $1\n';
-    script += '    echo >> $1 \\\# Set link libraries\n';
-    script += '    echo target_link_libraries\\(\\${PROJECT_NAME} PUBLIC >> $1\n';
-    for (const lib of enabledLibs) {
-        script += '        echo "    " ' + lib.name + ' >> $1\n';
-    }
-    script += '    echo \\) >> $1\n';
-    script += '    echo >> $1\n';
-    script += '    echo target_include_directories\\(\\${PROJECT_NAME} PUBLIC "src"\\) >> $1\n';
-    script += '    echo >> $1\n';
-    script += '\n';
-    script += '    echo "# ===============================================" >> $1\n';
-    script += '    echo \\\# Compile flags >> $1\n';
-    script += '    echo if \\(MSVC\\) >> $1\n';
-    script += '    echo "    " target_compile_options\\(\\${PROJECT_NAME} PUBLIC >> $1\n';
-    script += '    echo "        " /MP >> $1\n';
-    script += '    echo "    " \\) >> $1\n';
-    script += '    echo else\\(\\) >> $1\n';
-    script += '    echo "    " target_compile_options\\(\\${PROJECT_NAME} PUBLIC >> $1\n';
-    script += '    echo "        " -Wall >> $1\n';
-    script += '    echo "        " -Werror >> $1\n';
-    script += '    echo "        " -march=native >> $1\n';
-    script += '    echo "    " \\) >> $1\n';
-    script += '    echo endif\\(\\) >> $1\n';
-    script += '\n';
-    script += '}\n';
-    script += '\n';
-
-    // check if directory already exists
-    script += 'if [ -d "' + projectName + '" ]; then\n';
-    script += '    echo Directory ' + projectName + ' already exists!\n';
-    script += '    return 1\n';
-    script += 'fi\n';
-    script += '\n';
+    script += "wget https://raw.githubusercontent.com/lightwalk/cpp-projectify/master/generate.py && python3 generate.py -n " + projectName;
 
     if (projectUrl) {
-        script += 'git clone "' + projectUrl + '" "' + projectName + '"\n';
-        script += 'cd ' + projectName + '\n';
-    }
-    else {
-        script += 'echo "No git repository given. Init new repository?"\n';
-        script += 'USER_INPUT=""\n';
-        script += 'while [ -z "$USER_INPUT" ] || ';
-        script += '{ [ "$USER_INPUT" != "YES" ] ';
-        script += '&& [ "$USER_INPUT" != "Y" ] ';
-        script += '&& [ "$USER_INPUT" != "NO" ] ';
-        script += '&& [ "$USER_INPUT" != "N" ]; };\n';
-        script += 'do\n';
-        script += '    echo -n "[yes/[no]]:"\n';
-        script += '    read USER_INPUT\n';
-        script += '    if [ -z "$USER_INPUT" ]; then\n';
-        script += '        echo no\n';
-        script += '        USER_INPUT=NO\n';
-        script += '    fi\n';
-        script += '    USER_INPUT=$(echo $USER_INPUT | tr a-z A-Z)\n';
-        script += 'done\n';
-
-        script += 'if [[ $USER_INPUT == "YES" || $USER_INPUT == "Y" ]]; then\n';
-        script += '    mkdir ' + projectName + '\n';
-        script += '    cd ' + projectName + '\n';
-        script += 'else\n';
-        script += '    echo Aborting project setup.\n';
-        script += '    return 1\n';
-        script += 'fi\n';
+        script += " -u " + projectUrl;
     }
 
-    script += '\n';
-    script += 'make_cmakelists "CMakeLists.txt"\n';
-    script += 'touch "README.md"\n';
-    script += 'wget -q "https://raw.githubusercontent.com/lightwalk/cpp-projectify/master/data/.clang-format"\n';
-    script += 'mkdir "extern"\n';
-    script += 'mkdir "src"\n';
-    script += 'mkdir "bin"\n';
-    script += '\n';
-    script += 'make_main "src/main.cc"\n';
-    script += '\n';
-    script += 'git init\n';
-    script += '\n';
-    script += 'cd "extern"\n';
     for (const lib of enabledLibs) {
-        script += 'git submodule add ' + lib.url + ' ' + lib.name + '\n';
+        script += " " + lib.name;
     }
-    script += 'cd ..\n';
-    script += '\n';
-    script += 'git submodule update --init --recursive\n';
-    script += '\n';
-    script += '# move back up\n';
-    script += 'cd ..\n';
-    script += 'echo DONE!\n';
+
+    script += " && rm generate.py";
+
     return script;
 }
 
