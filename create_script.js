@@ -307,6 +307,13 @@ function onRepositoryChanged() {
     }
 }
 
+/// See https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
+function uuidv4() {
+    return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+      (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+    );
+  }
+
 function generate_script() {
     var script = "";
 
@@ -314,7 +321,9 @@ function generate_script() {
     var projectUrl = document.getElementById("git_repository_text_field").value;
     var enabledLibs = getEnabledLibraries();
 
-    script += "wget https://raw.githubusercontent.com/lightwalk/cpp-projectify/master/generate.py && python3 generate.py -n " + projectName;
+    var filename = uuidv4() + ".py";
+
+    script += "wget -O " + filename + " https://raw.githubusercontent.com/lightwalk/cpp-projectify/master/generate.py && python3 generate.py -n " + projectName;
 
     if (projectUrl) {
         script += " -u " + projectUrl;
@@ -324,7 +333,7 @@ function generate_script() {
         script += " " + lib.name;
     }
 
-    script += " && rm generate.py";
+    script += " && rm " + filename;
 
     return script;
 }
