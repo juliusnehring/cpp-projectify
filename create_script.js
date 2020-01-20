@@ -323,7 +323,7 @@ function generate_script() {
 
     var filename = uuidv4() + ".py";
 
-    script += "wget -O " + filename + " https://raw.githubusercontent.com/lightwalk/cpp-projectify/master/generate.py && python3 generate.py -n " + projectName;
+    script += "wget -O " + filename + " https://raw.githubusercontent.com/lightwalk/cpp-projectify/master/generate.py && python3 " + filename + " -n " + projectName;
 
     if (projectUrl) {
         script += " -u " + projectUrl;
