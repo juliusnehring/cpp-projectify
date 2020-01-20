@@ -49,7 +49,7 @@ def create_cmakelists(filepath, project_name, enabled_libraries):
         f.write('    set(BIN_DIR ${CMAKE_SOURCE_DIR}/bin/Default)\n')
         f.write('else()\n')
         f.write(
-            '    set(BIN_DIR ${CMAKE_SOURCE_DIR}/bin ${CMAKE_BUILD_TYPE})\n')
+            '    set(BIN_DIR ${CMAKE_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE})\n')
         f.write('endif()\n')
         f.write('set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${BIN_DIR})\n')
         f.write('set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${BIN_DIR})\n')
