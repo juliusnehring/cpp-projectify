@@ -2,14 +2,14 @@
     "libraries": [
         {
             "name": "clean-core",
-            "git_url": "https://github.com/project-arcana/clean-core.git",
+            "git_url": "git@github.com:project-arcana/clean-core.git",
             "description": "Lean reimagined standard library.",
             "project_url": "https://github.com/project-arcana/clean-core",
             "dependencies": []
         },
         {
             "name": "rich-log",
-            "git_url": "https://github.com/project-arcana/rich-log.git",
+            "git_url": "git@github.com:project-arcana/rich-log.git",
             "description": "Low-overhead versatile C++ rich logging library.",
             "project_url": "https://github.com/project-arcana/rich-log",
             "dependencies": []
@@ -37,7 +37,7 @@
         },
         {
             "name": "glfw",
-            "git_url": "https://github.com/glfw/glfw.git",
+            "git_url": "git@github.com:glfw/glfw.git",
             "description": "Multiplatform OpenGL library.",
             "project_url": "https://www.glfw.org/",
             "dependencies": []
@@ -71,21 +71,21 @@
         },
         {
             "name": "phantasm-renderer",
-            "git_url": "https://github.com/project-arcana/phantasm-renderer.git",
+            "git_url": "git@github.com:project-arcana/phantasm-renderer.git",
             "description": "Modern immediate-style high-productivity C++ renderer based on Vulkan/DX12.",
             "project_url": "https://github.com/project-arcana/phantasm-renderer",
             "dependencies": []
         },
         {
             "name": "task-dispatcher",
-            "git_url": "https://github.com/project-arcana/task-dispatcher.git",
+            "git_url": "git@github.com:project-arcana/task-dispatcher.git",
             "description": "High-performance intuitive task-based concurrency framework with fiber support.",
             "project_url": "https://github.com/project-arcana/task-dispatcher",
             "dependencies": []
         },
         {
             "name": "reflector",
-            "git_url": "https://github.com/project-arcana/reflector.git",
+            "git_url": "git@github.com:project-arcana/reflector.git",
             "description": "Non-intrusive high-performance versatile reflection and introspection library for C++.",
             "project_url": "https://github.com/project-arcana/reflector",
             "dependencies": [
@@ -94,14 +94,14 @@
         },
         {
             "name": "structured-interface",
-            "git_url": "https://github.com/project-arcana/structured-interface.git",
+            "git_url": "git@github.com:project-arcana/structured-interface.git",
             "description": "Structured immediate-mode production-quality UI.",
             "project_url": "https://github.com/project-arcana/structured-interface",
             "dependencies": []
         },
         {
             "name": "phantasm-viewer",
-            "git_url": "https://github.com/project-arcana/phantasm-viewer.git",
+            "git_url": "git@github.com:project-arcana/phantasm-viewer.git",
             "description": "Render-anywhere viewer that scales from one-line debug views to full applications.",
             "project_url": "https://github.com/project-arcana/phantasm-viewer",
             "dependencies": [
@@ -110,7 +110,7 @@
         },
         {
             "name": "nexus",
-            "git_url": "https://github.com/project-arcana/nexus.git",
+            "git_url": "git@github.com:project-arcana/nexus.git",
             "description": "C++ library for tests (unit, fuzz, property), benchmarks, apps.",
             "project_url": "https://github.com/project-arcana/nexus",
             "dependencies": [
