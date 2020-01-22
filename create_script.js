@@ -333,7 +333,7 @@ function generate_script() {
         script += " " + lib.name;
     }
 
-    script += " && rm " + filename;
+    script += " && rm -f" + filename;
 
     return script;
 }
