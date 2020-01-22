@@ -61,6 +61,16 @@ def create_cmakelists(filepath, project_name, enabled_libraries):
         if any(lib.name == "glow" for lib in enabled_libraries):
             f.write("set(GLOW_BIN_DIR ${CMAKE_SOURCE_DIR}/bin)\n")
 
+        # GLFW is annoying
+        if(any(lib.name == "glfw" for lib in enabled_libraries)):
+            f.write("\n")
+            f.write('# ===============================================\n')
+            f.write('# Mute some GLWF warnigns\n')
+            f.write('option(GLFW_BUILD_EXAMPLES "" OFF)\n')
+            f.write('option(GLFW_BUILD_TESTS "" OFF)\n')
+            f.write('option(GLFW_BUILD_DOCS "" OFF)\n')
+            f.write('option(GLFW_INSTALL "" OFF)\n')
+
         # Add the submodules
         f.write("\n")
         f.write("# ===============================================\n")
@@ -90,21 +100,12 @@ def create_cmakelists(filepath, project_name, enabled_libraries):
         f.write('# Make executable\n')
         f.write('add_executable(${PROJECT_NAME} ${SOURCES})\n')
 
-        if(any(lib.name == "glfw" for lib in enabled_libraries)):
-            f.write("\n")
-            f.write('# ===============================================\n')
-            f.write('# Mute some GLWF warnigns\n')
-            f.write('option(GLFW_BUILD_EXAMPLES "" OFF)\n')
-            f.write('option(GLFW_BUILD_TESTS "" OFF)\n')
-            f.write('option(GLFW_BUILD_DOCS "" OFF)\n')
-            f.write('option(GLFW_INSTALL "" OFF)\n')
-
         f.write("\n")
         f.write('# ===============================================\n')
         f.write('# Set link libraries\n')
         f.write('target_link_libraries(${PROJECT_NAME} PUBLIC\n')
         for lib in enabled_libraries:
-            f.write("    " + lib.name)
+            f.write("    " + lib.name + "\n")
         f.write(')\n')
 
         f.write('target_include_directories(${PROJECT_NAME} PUBLIC "src")\n')
@@ -160,8 +161,11 @@ def setup_project(args):
 
     Path(os.path.join(project_name, "README.md")).touch()
 
+    # Download files
     urllib.request.urlretrieve(
         "https://raw.githubusercontent.com/lightwalk/cpp-projectify/master/data/.clang-format", os.path.join(project_name, ".clang-format"))
+    urllib.request.urlretrieve(
+        "https://raw.githubusercontent.com/lightwalk/cpp-projectify/master/data/.gitignore", os.path.join(project_name, ".gitignore"))
 
     os.mkdir(os.path.join(project_name, "extern"))
     os.mkdir(os.path.join(project_name, "src"))
@@ -171,10 +175,10 @@ def setup_project(args):
 
     for lib in enabled_libs:
         call(["git", "-C", os.path.join(project_name,
-                                                    "extern"), "submodule", "add", lib.git_url, lib.name])
+                                        "extern"), "submodule", "add", lib.git_url, lib.name])
 
     call(["git", "-C", project_name, "submodule",
-                      "update", "--init", "--recursive"])
+          "update", "--init", "--recursive"])
 
     print("DONE!")
 
