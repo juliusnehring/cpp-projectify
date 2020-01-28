@@ -143,16 +143,7 @@ def setup_project(args):
     if(project_url):
         call(["git", "clone", project_url, project_name])
     else:
-        print("No git repository given. Init new repository?")
-
-        choice = input("[y/n]: ").lower()
-        while(choice != "yes" and choice != "y" and choice != "no" and choice != "n"):
-            choice = input("[y/n]: ").lower()
-
-        if(choice == "no" or choice == "n"):
-            print("Aborting!")
-            return 1
-
+        print("No git repository given. Initializing git...")
         os.mkdir(project_name)
         call(["git", "-C", project_name, "init"])
 
