@@ -12,7 +12,7 @@
             "git_url": "git@github.com:project-arcana/rich-log.git",
             "description": "Low-overhead versatile C++ rich logging library.",
             "project_url": "https://github.com/project-arcana/rich-log",
-            "dependencies": []
+            "dependencies": ["reflector"]
         },
         {
             "name": "ctracer",
