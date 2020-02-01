@@ -94,6 +94,20 @@
             ]
         },
 
+        {
+            "name": "arcana-incubator",
+            "git_url": "git@github.com:project-arcana/arcana-incubator.git",
+            "description": "WIP Libraries",
+            "project_url": "https://github.com/project-arcana/arcana-incubator",
+            "dependencies": [
+                "clean-core",
+                "typed-geometry",
+                "rich-log",
+                "reflector",
+                "phantasm-hardware-interface"
+            ]
+        },
+
 
         {
             "name": "glfw",

@@ -6,10 +6,12 @@ BasedOnStyle: Google
 #Language: Cpp
 Standard: Cpp11
 
+
 # 80 columns guideline
 ColumnLimit: 150
 PenaltyExcessCharacter: 1
 PenaltyBreakString: 50
+
 
 # Indentation and Braces
 IndentWidth: 4
@@ -52,3 +54,6 @@ AccessModifierOffset: -4
 FixNamespaceComments: false
 AlignTrailingComments: true
 CommentPragmas: '!Api.*'
+
+# Includes
+IncludeBlocks: Preserve
