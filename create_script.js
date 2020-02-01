@@ -212,26 +212,6 @@ function getEnabledLibraries() {
     return libs;
 }
 
-const copyToClipboard = str => {
-    const el = document.createElement('textarea');  // Create a <textarea> element
-    el.value = str;                                 // Set its value to the string that you want copied
-    el.setAttribute('readonly', '');                // Make it readonly to be tamper-proof
-    el.style.position = 'absolute';
-    el.style.left = '-9999px';                      // Move outside the screen to make it invisible
-    document.body.appendChild(el);                  // Append the <textarea> element to the HTML document
-    const selected =
-        document.getSelection().rangeCount > 0        // Check if there is any content selected previously
-            ? document.getSelection().getRangeAt(0)     // Store selection if found
-            : false;                                    // Mark as false to know no selection existed before
-    el.select();                                    // Select the <textarea> content
-    document.execCommand('copy');                   // Copy - only works as a result of a user action (e.g. click events)
-    document.body.removeChild(el);                  // Remove the <textarea> element
-    if (selected) {                                 // If a selection existed before copying
-        document.getSelection().removeAllRanges();    // Unselect everything on the HTML document
-        document.getSelection().addRange(selected);   // Restore the original selection
-    }
-};
-
 function checkValidGitUrl(url) {
     // extremely simple test for now:
     return (url.startsWith("git://") || url.startsWith("git@") || url.startsWith("https://")) && url.endsWith(".git");
@@ -256,7 +236,9 @@ function onGenerateButtonClick() {
         var script = generate_script();
         var output = document.getElementById("output_textarea");
         output.value = script;
-        copyToClipboard(script);
+        output.select();
+        output.setSelectionRange(0, 99999);
+        document.execCommand("copy");
     }
 }
 
@@ -264,11 +246,6 @@ function decodeHtml(html) {
     var txt = document.createElement("textarea");
     txt.innerHTML = html;
     return txt.value;
-}
-
-function onCopyToClipboardClick() {
-    var output = document.getElementById("output_textarea");
-    copyToClipboard(decodeHtml(output.value));
 }
 
 function contains(libraries, name) {
@@ -306,13 +283,6 @@ function onRepositoryChanged() {
     }
 }
 
-/// See https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
-function uuidv4() {
-    return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
-      (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
-    );
-  }
-
 function generate_script() {
     var script = "";
 
@@ -320,9 +290,7 @@ function generate_script() {
     var projectUrl = document.getElementById("git_repository_text_field").value;
     var enabledLibs = getEnabledLibraries();
 
-    var filename = uuidv4() + ".py";
-
-    script += "wget -O " + filename + " https://raw.githubusercontent.com/jkunstwald/cpp-projectify/master/generate.py && python3 " + filename + " -n " + projectName;
+    script += "curl https://raw.githubusercontent.com/jkunstwald/cpp-projectify/master/generate.py | python3 - -n " + projectName;
 
     if (projectUrl) {
         script += " -u " + projectUrl;
@@ -331,8 +299,6 @@ function generate_script() {
     for (const lib of enabledLibs) {
         script += " " + lib.name;
     }
-
-    script += " && rm -f " + filename;
 
     return script;
 }
