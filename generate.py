@@ -22,10 +22,11 @@ def load_libraries():
 
 def create_main(filepath):
     with open(filepath, "w") as f:
-        f.write('#include <iostream>\n\n')
-        f.write('int main(int /* argc */, char * /* argv */ [])\n')
+        f.write('#include <cstdio>\n\n')
+        f.write('int main()\n')
         f.write('{\n')
-        f.write('    std::cout << "Hello World!" << std::endl;\n')
+        f.write('    printf("application main\\n");\n')
+        f.write('    return 0;\n')
         f.write('}\n')
 
 
@@ -65,7 +66,7 @@ def create_cmakelists(filepath, project_name, enabled_libraries):
         if(any(lib.name == "glfw" for lib in enabled_libraries)):
             f.write("\n")
             f.write('# ===============================================\n')
-            f.write('# Mute some GLWF warnigns\n')
+            f.write('# disable glfw additionals\n')
             f.write('option(GLFW_BUILD_EXAMPLES "" OFF)\n')
             f.write('option(GLFW_BUILD_TESTS "" OFF)\n')
             f.write('option(GLFW_BUILD_DOCS "" OFF)\n')
@@ -80,9 +81,8 @@ def create_cmakelists(filepath, project_name, enabled_libraries):
 
         f.write('\n')
         f.write('# ===============================================\n')
-        f.write('# Configure executable\n')
+        f.write('# configure executable\n')
         f.write('\n')
-        f.write('# do evil glob\n')
         f.write('file(GLOB_RECURSE SOURCES\n')
         f.write('    "src/*.cc"\n')
         f.write('    "src/*.hh"\n')
@@ -97,12 +97,12 @@ def create_cmakelists(filepath, project_name, enabled_libraries):
 
         f.write("\n")
         f.write('# ===============================================\n')
-        f.write('# Make executable\n')
+        f.write('# add executable\n\n')
         f.write('add_executable(${PROJECT_NAME} ${SOURCES})\n')
 
         f.write("\n")
         f.write('# ===============================================\n')
-        f.write('# Set link libraries\n')
+        f.write('# link libraries\n')
         f.write('target_link_libraries(${PROJECT_NAME} PUBLIC\n')
         for lib in enabled_libraries:
             f.write("    " + lib.name + "\n")
@@ -112,7 +112,7 @@ def create_cmakelists(filepath, project_name, enabled_libraries):
 
         f.write("\n")
         f.write('# ===============================================\n')
-        f.write('# Compile flags\n')
+        f.write('# compiler flags\n')
         f.write('if (MSVC)\n')
         f.write('    target_compile_options(${PROJECT_NAME} PUBLIC\n')
         f.write('        /MP\n')
@@ -120,7 +120,7 @@ def create_cmakelists(filepath, project_name, enabled_libraries):
         f.write('else()\n')
         f.write('    target_compile_options(${PROJECT_NAME} PUBLIC\n')
         f.write('        -Wall\n')
-        f.write('        -Werror\n')
+        f.write('        -Wno-unused-variable\n')
         f.write('        -march=native\n')
         f.write('    )\n')
         f.write('endif()\n')
