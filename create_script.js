@@ -25,7 +25,7 @@ var getJSON = function (url, callback) {
 };
 
 function load_libraries(callback) {
-    var url = "https://raw.githubusercontent.com/lightwalk/cpp-projectify/master/libraries.json";
+    var url = "libraries.json";
     output = [];
     getJSON(url, function (err, libs) {
         if (err !== null) {
@@ -102,7 +102,7 @@ function init() {
             header_description.appendChild(document.createTextNode("Description"));
             header.appendChild(header_description);
             var header_project_url = document.createElement("th");
-            header_project_url.appendChild(document.createTextNode("Project Page"));
+            header_project_url.appendChild(document.createTextNode("Repository"));
             header.appendChild(header_project_url);
             table.appendChild(header);
 
@@ -129,9 +129,8 @@ function init() {
                 var description = document.createTextNode(lib.description);
 
                 var project_page = document.createElement("a");
-                var link_text = document.createTextNode(lib.projectPage.replace(/(^\w+:|^)\/\//, ''));
+                var link_text = document.createTextNode(new URL(lib.projectPage).hostname);
                 project_page.appendChild(link_text)
-                project_page.title = lib.projectPage;
                 project_page.title = lib.projectPage;
                 project_page.href = lib.projectPage;
                 project_page.setAttribute("target", "_blank");
@@ -323,7 +322,7 @@ function generate_script() {
 
     var filename = uuidv4() + ".py";
 
-    script += "wget -O " + filename + " https://raw.githubusercontent.com/lightwalk/cpp-projectify/master/generate.py && python3 " + filename + " -n " + projectName;
+    script += "wget -O " + filename + " https://raw.githubusercontent.com/jkunstwald/cpp-projectify/master/generate.py && python3 " + filename + " -n " + projectName;
 
     if (projectUrl) {
         script += " -u " + projectUrl;

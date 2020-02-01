@@ -12,7 +12,7 @@ class Library(object):
 
 
 def load_libraries():
-    with urllib.request.urlopen("https://raw.githubusercontent.com/lightwalk/cpp-projectify/master/libraries.json") as url:
+    with urllib.request.urlopen("https://raw.githubusercontent.com/jkunstwald/cpp-projectify/master/libraries.json") as url:
         data = json.loads(url.read().decode())
         libraries = []
         for lib in data["libraries"]:
@@ -154,9 +154,9 @@ def setup_project(args):
 
     # Download files
     urllib.request.urlretrieve(
-        "https://raw.githubusercontent.com/lightwalk/cpp-projectify/master/data/.clang-format", os.path.join(project_name, ".clang-format"))
+        "https://raw.githubusercontent.com/jkunstwald/cpp-projectify/master/data/.clang-format", os.path.join(project_name, ".clang-format"))
     urllib.request.urlretrieve(
-        "https://raw.githubusercontent.com/lightwalk/cpp-projectify/master/data/.gitignore", os.path.join(project_name, ".gitignore"))
+        "https://raw.githubusercontent.com/jkunstwald/cpp-projectify/master/data/.gitignore", os.path.join(project_name, ".gitignore"))
 
     os.mkdir(os.path.join(project_name, "extern"))
     os.mkdir(os.path.join(project_name, "src"))
