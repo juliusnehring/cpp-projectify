@@ -82,7 +82,6 @@ else()
     list(APPEND COMMON_COMPILER_FLAGS
         -Wall
         -Wextra
-        -Wno-unused-variable
     )
 
     if ({0}_ENABLE_WERROR)
