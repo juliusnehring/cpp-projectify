@@ -213,10 +213,16 @@ def setup_project(args):
     Path(os.path.join(project_name, "README.md")).touch()
 
     # Download files
-    urllib.request.urlretrieve(
-        origin_url + "/data/.clang-format", os.path.join(project_name, ".clang-format"))
-    urllib.request.urlretrieve(
-        origin_url + "/data/.gitignore", os.path.join(project_name, ".gitignore"))
+    raw_data_download_url = origin_url
+    if not "localhost" in origin_url:
+        # extract github raw domain
+        github_username = origin_url.split("/")[2].split(".")[0]
+        github_reponame = origin_url.split("/")[3]
+        raw_data_download_url = "https://raw.githubusercontent.com/{}/{}/master".format(github_username, github_reponame)
+
+    urllib.request.urlretrieve(raw_data_download_url + "/data/.clang-format", os.path.join(project_name, ".clang-format"))
+    urllib.request.urlretrieve(raw_data_download_url + "/data/.gitignore", os.path.join(project_name, ".gitignore"))
+
 
     os.mkdir(os.path.join(project_name, "extern"))
     os.mkdir(os.path.join(project_name, "src"))
