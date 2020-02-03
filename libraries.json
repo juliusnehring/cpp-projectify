@@ -3,49 +3,123 @@
         {
             "name": "clean-core",
             "git_url": "git@github.com:project-arcana/clean-core.git",
-            "description": "Lean reimagined standard library.",
+            "description": "STL Replacement",
             "project_url": "https://github.com/project-arcana/clean-core",
-            "dependencies": []
-        },
-        {
-            "name": "rich-log",
-            "git_url": "git@github.com:project-arcana/rich-log.git",
-            "description": "Low-overhead versatile C++ rich logging library.",
-            "project_url": "https://github.com/project-arcana/rich-log",
-            "dependencies": ["reflector"]
-        },
-        {
-            "name": "ctracer",
-            "git_url": "https://www.graphics.rwth-aachen.de:9000/ptrettner/ctracer.git",
-            "description": "Fast, cycle based tracing library.",
-            "project_url": "https://graphics.rwth-aachen.de:9000/ptrettner/ctracer",
             "dependencies": []
         },
         {
             "name": "typed-geometry",
             "git_url": "https://www.graphics.rwth-aachen.de:9000/ptrettner/typed-geometry.git",
-            "description": "Header-only strongly typed math library for graphics and geometry.",
+            "description": "Math",
             "project_url": "https://graphics.rwth-aachen.de:9000/ptrettner/typed-geometry",
             "dependencies": []
         },
         {
-            "name": "polymesh",
-            "git_url": "https://www.graphics.rwth-aachen.de:9000/ptrettner/polymesh.git",
-            "description": "A C++17 easy-to-use high-performance half-edge data structure with strong functional features.",
-            "project_url": "https://graphics.rwth-aachen.de:9000/ptrettner/polymesh",
+            "name": "ctracer",
+            "git_url": "https://www.graphics.rwth-aachen.de:9000/ptrettner/ctracer.git",
+            "description": "Profiling",
+            "project_url": "https://graphics.rwth-aachen.de:9000/ptrettner/ctracer",
             "dependencies": []
         },
         {
+            "name": "reflector",
+            "git_url": "git@github.com:project-arcana/reflector.git",
+            "description": "Reflection",
+            "project_url": "https://github.com/project-arcana/reflector",
+            "dependencies": [
+                "clean-core"
+            ]
+        },
+        {
+            "name": "task-dispatcher",
+            "git_url": "git@github.com:project-arcana/task-dispatcher.git",
+            "description": "Multithreading",
+            "project_url": "https://github.com/project-arcana/task-dispatcher",
+            "dependencies": [
+                "clean-core"
+            ]
+        },
+        {
+            "name": "rich-log",
+            "git_url": "git@github.com:project-arcana/rich-log.git",
+            "description": "Logging",
+            "project_url": "https://github.com/project-arcana/rich-log",
+            "dependencies": ["reflector"]
+        },
+
+
+        {
+            "name": "polymesh",
+            "git_url": "https://www.graphics.rwth-aachen.de:9000/ptrettner/polymesh.git",
+            "description": "Halfedge Meshes",
+            "project_url": "https://graphics.rwth-aachen.de:9000/ptrettner/polymesh",
+            "dependencies": []
+        },
+        
+
+        {
+            "name": "phantasm-hardware-interface",
+            "git_url": "git@github.com:project-arcana/phantasm-hardware-interface.git",
+            "description": "D3D12/Vulkan Abstraction",
+            "project_url": "https://github.com/project-arcana/phantasm-hardware-interface",
+            "dependencies": [
+                "clean-core",
+                "typed-geometry",
+                "rich-log"
+            ]
+        },
+        {
+            "name": "phantasm-renderer",
+            "git_url": "git@github.com:project-arcana/phantasm-renderer.git",
+            "description": "Higher-level Rendering",
+            "project_url": "https://github.com/project-arcana/phantasm-renderer",
+            "dependencies": [
+                "phantasm-hardware-interface"
+            ]
+        },
+        {
+            "name": "structured-interface",
+            "git_url": "git@github.com:project-arcana/structured-interface.git",
+            "description": "Immediate-mode UI",
+            "project_url": "https://github.com/project-arcana/structured-interface",
+            "dependencies": []
+        },
+        {
+            "name": "phantasm-viewer",
+            "git_url": "git@github.com:project-arcana/phantasm-viewer.git",
+            "description": "Viewer",
+            "project_url": "https://github.com/project-arcana/phantasm-viewer",
+            "dependencies": [
+                "phantasm-renderer"
+            ]
+        },
+
+        {
+            "name": "arcana-incubator",
+            "git_url": "git@github.com:project-arcana/arcana-incubator.git",
+            "description": "WIP Libraries",
+            "project_url": "https://github.com/project-arcana/arcana-incubator",
+            "dependencies": [
+                "clean-core",
+                "typed-geometry",
+                "rich-log",
+                "reflector",
+                "phantasm-hardware-interface"
+            ]
+        },
+
+
+        {
             "name": "glfw",
             "git_url": "git@github.com:glfw/glfw.git",
-            "description": "Multiplatform OpenGL library.",
+            "description": "Multiplatform OpenGL library",
             "project_url": "https://www.glfw.org/",
             "dependencies": []
         },
         {
             "name": "glow",
             "git_url": "https://www.graphics.rwth-aachen.de:9000/Glow/glow.git",
-            "description": "OpenGL Object-oriented Wrapper.",
+            "description": "OpenGL Wrapper",
             "project_url": "https://graphics.rwth-aachen.de:9000/Glow/glow",
             "dependencies": [
                 "glfw",
@@ -55,14 +129,14 @@
         {
             "name": "imgui",
             "git_url": "https://www.graphics.rwth-aachen.de:9000/ptrettner/imgui-lean.git",
-            "description": "Dear ImGui is a bloat-free graphical user interface library for C++.",
+            "description": "Dear ImGui",
             "project_url": "https://github.com/ocornut/imgui",
             "dependencies": []
         },
         {
             "name": "glow-extras",
             "git_url": "https://www.graphics.rwth-aachen.de:9000/Glow/glow-extras.git",
-            "description": "Companion library for glow with convenience and helper functions. Separated into mostly independent sub-libraries.",
+            "description": "GLOW misc",
             "project_url": "https://graphics.rwth-aachen.de:9000/Glow/glow-extras",
             "dependencies": [
                 "glow",
@@ -70,48 +144,9 @@
             ]
         },
         {
-            "name": "phantasm-renderer",
-            "git_url": "git@github.com:project-arcana/phantasm-renderer.git",
-            "description": "Modern immediate-style high-productivity C++ renderer based on Vulkan/DX12.",
-            "project_url": "https://github.com/project-arcana/phantasm-renderer",
-            "dependencies": []
-        },
-        {
-            "name": "task-dispatcher",
-            "git_url": "git@github.com:project-arcana/task-dispatcher.git",
-            "description": "High-performance intuitive task-based concurrency framework with fiber support.",
-            "project_url": "https://github.com/project-arcana/task-dispatcher",
-            "dependencies": []
-        },
-        {
-            "name": "reflector",
-            "git_url": "git@github.com:project-arcana/reflector.git",
-            "description": "Non-intrusive high-performance versatile reflection and introspection library for C++.",
-            "project_url": "https://github.com/project-arcana/reflector",
-            "dependencies": [
-                "clean-core"
-            ]
-        },
-        {
-            "name": "structured-interface",
-            "git_url": "git@github.com:project-arcana/structured-interface.git",
-            "description": "Structured immediate-mode production-quality UI.",
-            "project_url": "https://github.com/project-arcana/structured-interface",
-            "dependencies": []
-        },
-        {
-            "name": "phantasm-viewer",
-            "git_url": "git@github.com:project-arcana/phantasm-viewer.git",
-            "description": "Render-anywhere viewer that scales from one-line debug views to full applications.",
-            "project_url": "https://github.com/project-arcana/phantasm-viewer",
-            "dependencies": [
-                "phantasm-renderer"
-            ]
-        },
-        {
             "name": "nexus",
             "git_url": "git@github.com:project-arcana/nexus.git",
-            "description": "C++ library for tests (unit, fuzz, property), benchmarks, apps.",
+            "description": "Unit Tests",
             "project_url": "https://github.com/project-arcana/nexus",
             "dependencies": [
                 "clean-core",

@@ -25,7 +25,7 @@ var getJSON = function (url, callback) {
 };
 
 function load_libraries(callback) {
-    var url = "https://raw.githubusercontent.com/lightwalk/cpp-projectify/master/libraries.json";
+    var url = "libraries.json";
     output = [];
     getJSON(url, function (err, libs) {
         if (err !== null) {
@@ -102,7 +102,7 @@ function init() {
             header_description.appendChild(document.createTextNode("Description"));
             header.appendChild(header_description);
             var header_project_url = document.createElement("th");
-            header_project_url.appendChild(document.createTextNode("Project Page"));
+            header_project_url.appendChild(document.createTextNode("Repository"));
             header.appendChild(header_project_url);
             table.appendChild(header);
 
@@ -129,9 +129,8 @@ function init() {
                 var description = document.createTextNode(lib.description);
 
                 var project_page = document.createElement("a");
-                var link_text = document.createTextNode(lib.projectPage.replace(/(^\w+:|^)\/\//, ''));
+                var link_text = document.createTextNode(new URL(lib.projectPage).hostname);
                 project_page.appendChild(link_text)
-                project_page.title = lib.projectPage;
                 project_page.title = lib.projectPage;
                 project_page.href = lib.projectPage;
                 project_page.setAttribute("target", "_blank");
@@ -213,26 +212,6 @@ function getEnabledLibraries() {
     return libs;
 }
 
-const copyToClipboard = str => {
-    const el = document.createElement('textarea');  // Create a <textarea> element
-    el.value = str;                                 // Set its value to the string that you want copied
-    el.setAttribute('readonly', '');                // Make it readonly to be tamper-proof
-    el.style.position = 'absolute';
-    el.style.left = '-9999px';                      // Move outside the screen to make it invisible
-    document.body.appendChild(el);                  // Append the <textarea> element to the HTML document
-    const selected =
-        document.getSelection().rangeCount > 0        // Check if there is any content selected previously
-            ? document.getSelection().getRangeAt(0)     // Store selection if found
-            : false;                                    // Mark as false to know no selection existed before
-    el.select();                                    // Select the <textarea> content
-    document.execCommand('copy');                   // Copy - only works as a result of a user action (e.g. click events)
-    document.body.removeChild(el);                  // Remove the <textarea> element
-    if (selected) {                                 // If a selection existed before copying
-        document.getSelection().removeAllRanges();    // Unselect everything on the HTML document
-        document.getSelection().addRange(selected);   // Restore the original selection
-    }
-};
-
 function checkValidGitUrl(url) {
     // extremely simple test for now:
     return (url.startsWith("git://") || url.startsWith("git@") || url.startsWith("https://")) && url.endsWith(".git");
@@ -257,7 +236,9 @@ function onGenerateButtonClick() {
         var script = generate_script();
         var output = document.getElementById("output_textarea");
         output.value = script;
-        copyToClipboard(script);
+        output.select();
+        output.setSelectionRange(0, 99999);
+        document.execCommand("copy");
     }
 }
 
@@ -265,11 +246,6 @@ function decodeHtml(html) {
     var txt = document.createElement("textarea");
     txt.innerHTML = html;
     return txt.value;
-}
-
-function onCopyToClipboardClick() {
-    var output = document.getElementById("output_textarea");
-    copyToClipboard(decodeHtml(output.value));
 }
 
 function contains(libraries, name) {
@@ -307,33 +283,33 @@ function onRepositoryChanged() {
     }
 }
 
-/// See https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
-function uuidv4() {
-    return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
-      (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
-    );
-  }
-
 function generate_script() {
-    var script = "";
+    const projectName = document.getElementById("project_name_text_field").value.replace(/\s/g, '');
+    const currentUrl = document.location.href;
 
-    var projectName = document.getElementById("project_name_text_field").value.replace(/\s/g, '');
-    var projectUrl = document.getElementById("git_repository_text_field").value;
-    var enabledLibs = getEnabledLibraries();
+    let script = "curl " + currentUrl + "generate.py | python3 - -n " + projectName + " -o " + currentUrl;
 
-    var filename = uuidv4() + ".py";
-
-    script += "wget -O " + filename + " https://raw.githubusercontent.com/lightwalk/cpp-projectify/master/generate.py && python3 " + filename + " -n " + projectName;
-
+    const projectUrl = document.getElementById("git_repository_text_field").value;
     if (projectUrl) {
         script += " -u " + projectUrl;
     }
 
+    const gccClangFlags = document.getElementById("flags_linux").value;
+    if (gccClangFlags)
+    {
+        script += " -l \"" + gccClangFlags + "\"";
+    }
+
+    const msvcFlags = document.getElementById("flags_msvc").value;
+    if (msvcFlags)
+    {
+        script += " -m \"" + msvcFlags + "\"";
+    }
+
+    const enabledLibs = getEnabledLibraries();
     for (const lib of enabledLibs) {
         script += " " + lib.name;
     }
-
-    script += " && rm -f " + filename;
 
     return script;
 }

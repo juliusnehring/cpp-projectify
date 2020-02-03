@@ -5,10 +5,20 @@
 <title>C++ Project maker</title>
 </head>
 <style>
+body{margin:15px
+auto;line-height:1.4;font-size:16px;color:#444;padding:0
+10px;font-family: sans-serif;text-align:center;}
+h1,h2,h3{line-height:1.2}
+
+.wrapper-block {
+    display: inline-block;
+    position: relative;
+    vertical-align: top;
+    text-align: left;
+}
+
     table {
-      font-family: arial, sans-serif;
       border-collapse: collapse;
-      width: 50%;
     }
     
     td, th {
@@ -18,25 +28,61 @@
     }
     
     tr:nth-child(even) {
-      background-color: #dddddd;
+      background-color: #f1f1f1;
+    }
+
+    .input-row {
+      margin: 5px 25px;
+    }
+    
+    .input-row input {
+      padding: 5px;
+      margin: 5px;
+    }
+
+    .input-row button {
+      padding: 5px;
+      margin: 5px 0;
+    }
+
+    textarea#output_textarea {
+      margin: 5px 0;
+      padding: 5px;
     }
     </style>
 <body>
-<div>
-<label for="git_repository_text_field">Existing Repository (optional):</label>
-<input type="text" name="git_repository_text_field" id="git_repository_text_field" onchange="onRepositoryChanged()">
-<br>
-<label for="project_name_text_field">Project Name:</label>
-<input type="text" name="project_name_text_field" id="project_name_text_field">
+
+<div class="wrapper-block">
+  <div class="input-row">
+    <label for="git_repository_text_field">Existing Repository (optional)</label>
+    <input type="text" name="git_repository_text_field" id="git_repository_text_field" onchange="onRepositoryChanged()">
+  </div>
+  <div class="input-row">
+    <label for="flags_linux">clang/gcc flags</label>
+    <input type="text" name="flags_linux" id="flags_linux" value="-Wall -Wextra">
+  </div>
+  <div class="input-row">
+    <label for="flags_msvc">MSVC flags</label>
+    <input type="text" name="flags_msvc" id="flags_msvc" value="/MP">
+  </div>
+
+  <div class="input-row">
+    <label for="project_name_text_field">Project Name</label>
+    <input type="text" name="project_name_text_field" id="project_name_text_field" value="unnamed">
+  </div>
+  <div class="input-row">
+    <div name="result_div" id="result_div">
+        <button onclick="onGenerateButtonClick()">Generate</button>
+        <br>
+        <textarea name="output_textarea" id="output_textarea" onclick="this.focus();this.select()" readonly="readonly" placeholder="command" rows="4" cols="60"></textarea>
+    </div>
+  </div>
+
 </div>
-Dependencies
-<div name="libaries_div" id="libraries_div">
-</div>
-<div name="result_div" id="result_div">
-    <button onclick="onGenerateButtonClick()">Generate</button>
-    <button onclick="onCopyToClipboardClick()">Copy to Clipboard</button>
-    <br>
-    <textarea name="output_textarea" id="output_textarea"></textarea>
+
+<div class="wrapper-block">
+  <div id="libraries_div">
+  </div>
 </div>
 
 </body>
