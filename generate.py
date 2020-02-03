@@ -30,7 +30,7 @@ def create_main(filepath):
         f.write('}\n')
 
 
-def create_cmakelists(filepath, project_name : str, enabled_libraries):
+def create_cmakelists(filepath, project_name : str, flags_linux : str, flags_msvc : str, enabled_libraries):
     with open(filepath, "w") as f:
         
         project_caps_prefix = project_name[0:3].upper()
@@ -71,18 +71,13 @@ set(COMMON_COMPILER_FLAGS "")
 set(COMMON_LINKER_FLAGS "")
 
 if (MSVC)
-    list(APPEND COMMON_COMPILER_FLAGS
-        /MP
-    )
+    list(APPEND COMMON_COMPILER_FLAGS {2})
 
     if ({0}_ENABLE_WERROR)
         list(APPEND COMMON_COMPILER_FLAGS /WX)
     endif()
 else()
-    list(APPEND COMMON_COMPILER_FLAGS
-        -Wall
-        -Wextra
-    )
+    list(APPEND COMMON_COMPILER_FLAGS {1})
 
     if ({0}_ENABLE_WERROR)
         list(APPEND COMMON_COMPILER_FLAGS -Werror)
@@ -122,7 +117,7 @@ else()
     endif()
 endif()
 
-        """.format(project_caps_prefix))
+        """.format(project_caps_prefix, flags_linux, flags_msvc))
         f.write('\n')
         f.write('# ===============================================\n')
         f.write('# Bin dir\n')
@@ -213,7 +208,7 @@ def setup_project(args):
         call(["git", "-C", project_name, "init"])
 
     create_cmakelists(os.path.join(
-        project_name, "CMakeLists.txt"), project_name, enabled_libs)
+        project_name, "CMakeLists.txt"), project_name, args.flags_linux, args.flags_msvc, enabled_libs)
 
     Path(os.path.join(project_name, "README.md")).touch()
 
@@ -244,6 +239,8 @@ if __name__ == "__main__":
         description="Create project with dependencies")
     parser.add_argument("--name", "-n", type=str, required=True)
     parser.add_argument("--origin", "-o", type=str, required=True)
+    parser.add_argument("--flags_linux", "-l", type=str)
+    parser.add_argument("--flags_msvc", "-m", type=str)
     parser.add_argument("--url", "-u", type=str)
     parser.add_argument("libraries", nargs='*', type=str)
     args = parser.parse_args()

@@ -294,6 +294,18 @@ function generate_script() {
         script += " -u " + projectUrl;
     }
 
+    const gccClangFlags = document.getElementById("flags_linux").value;
+    if (gccClangFlags)
+    {
+        script += " -l \"" + gccClangFlags + "\"";
+    }
+
+    const msvcFlags = document.getElementById("flags_msvc").value;
+    if (msvcFlags)
+    {
+        script += " -m \"" + msvcFlags + "\"";
+    }
+
     const enabledLibs = getEnabledLibraries();
     for (const lib of enabledLibs) {
         script += " " + lib.name;

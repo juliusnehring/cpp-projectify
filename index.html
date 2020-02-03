@@ -5,12 +5,19 @@
 <title>C++ Project maker</title>
 </head>
 <style>
-  body{margin:15px
-auto;max-width:800px;line-height:1.4;font-size:16px;color:#444;padding:0
-10px}h1,h2,h3{line-height:1.2}
+body{margin:15px
+auto;line-height:1.4;font-size:16px;color:#444;padding:0
+10px;font-family: sans-serif;text-align:center;}
+h1,h2,h3{line-height:1.2}
+
+.wrapper-block {
+    display: inline-block;
+    position: relative;
+    vertical-align: top;
+    text-align: left;
+}
 
     table {
-      font-family: arial, sans-serif;
       border-collapse: collapse;
     }
     
@@ -44,22 +51,37 @@ auto;max-width:800px;line-height:1.4;font-size:16px;color:#444;padding:0
     }
     </style>
 <body>
-<div name="libaries_div" id="libraries_div">
+
+<div class="wrapper-block">
+  <div class="input-row">
+    <label for="git_repository_text_field">Existing Repository (optional)</label>
+    <input type="text" name="git_repository_text_field" id="git_repository_text_field" onchange="onRepositoryChanged()">
+  </div>
+  <div class="input-row">
+    <label for="flags_linux">clang/gcc flags</label>
+    <input type="text" name="flags_linux" id="flags_linux" value="-Wall -Wextra">
+  </div>
+  <div class="input-row">
+    <label for="flags_msvc">MSVC flags</label>
+    <input type="text" name="flags_msvc" id="flags_msvc" value="/MP">
+  </div>
+
+  <div class="input-row">
+    <label for="project_name_text_field">Project Name</label>
+    <input type="text" name="project_name_text_field" id="project_name_text_field" value="unnamed">
+  </div>
+  <div class="input-row">
+    <div name="result_div" id="result_div">
+        <button onclick="onGenerateButtonClick()">Generate</button>
+        <br>
+        <textarea name="output_textarea" id="output_textarea" onclick="this.focus();this.select()" readonly="readonly" placeholder="command" rows="4" cols="60"></textarea>
+    </div>
+  </div>
+
 </div>
 
-<div class="input-row">
-  <label for="git_repository_text_field">Existing Repository (optional)</label>
-  <input type="text" name="git_repository_text_field" id="git_repository_text_field" onchange="onRepositoryChanged()">
-</div>
-<div class="input-row">
-  <label for="project_name_text_field">Project Name</label>
-  <input type="text" name="project_name_text_field" id="project_name_text_field" value="unnamed">
-</div>
-<div class="input-row">
-  <div name="result_div" id="result_div">
-      <button onclick="onGenerateButtonClick()">Generate</button>
-      <br>
-      <textarea name="output_textarea" id="output_textarea" onclick="this.focus();this.select()" readonly="readonly" placeholder="command" rows="4" cols="60"></textarea>
+<div class="wrapper-block">
+  <div id="libraries_div">
   </div>
 </div>
 
