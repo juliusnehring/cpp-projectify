@@ -11,8 +11,8 @@ class Library(object):
         self.__dict__ = data
 
 
-def load_libraries():
-    with urllib.request.urlopen("https://raw.githubusercontent.com/jkunstwald/cpp-projectify/master/libraries.json") as url:
+def load_libraries(github_usr : str):
+    with urllib.request.urlopen("https://raw.githubusercontent.com/" + github_usr + "/cpp-projectify/master/libraries.json") as url:
         data = json.loads(url.read().decode())
         libraries = []
         for lib in data["libraries"]:
@@ -127,7 +127,7 @@ def create_cmakelists(filepath, project_name, enabled_libraries):
 
 
 def get_enabled_libs(args):
-    all_libs = load_libraries()
+    all_libs = load_libraries(args.github)
     return list(filter(lambda lib: lib.name in args.libraries, all_libs))
 
 
@@ -135,6 +135,7 @@ def setup_project(args):
     project_name = args.name
     project_url = args.url
     enabled_libs = get_enabled_libs(args)
+    github_username = args.github
 
     if(os.path.isdir(project_name)):
         print("Directory " + project_name + " already exists! Aborting!")
@@ -154,9 +155,9 @@ def setup_project(args):
 
     # Download files
     urllib.request.urlretrieve(
-        "https://raw.githubusercontent.com/jkunstwald/cpp-projectify/master/data/.clang-format", os.path.join(project_name, ".clang-format"))
+        "https://raw.githubusercontent.com/" + github_username + "/cpp-projectify/master/data/.clang-format", os.path.join(project_name, ".clang-format"))
     urllib.request.urlretrieve(
-        "https://raw.githubusercontent.com/jkunstwald/cpp-projectify/master/data/.gitignore", os.path.join(project_name, ".gitignore"))
+        "https://raw.githubusercontent.com/" + github_username + "/cpp-projectify/master/data/.gitignore", os.path.join(project_name, ".gitignore"))
 
     os.mkdir(os.path.join(project_name, "extern"))
     os.mkdir(os.path.join(project_name, "src"))
@@ -178,6 +179,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Create project with dependencies")
     parser.add_argument("--name", "-n", type=str, required=True)
+    parser.add_argument("--github", "-g", type=str, required=True)
     parser.add_argument("--url", "-u", type=str)
     parser.add_argument("libraries", nargs='*', type=str)
     args = parser.parse_args()

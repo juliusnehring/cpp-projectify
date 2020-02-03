@@ -284,18 +284,17 @@ function onRepositoryChanged() {
 }
 
 function generate_script() {
-    var script = "";
+    const projectName = document.getElementById("project_name_text_field").value.replace(/\s/g, '');
+    const githubUsername = document.location.host.split(".")[0];
 
-    var projectName = document.getElementById("project_name_text_field").value.replace(/\s/g, '');
-    var projectUrl = document.getElementById("git_repository_text_field").value;
-    var enabledLibs = getEnabledLibraries();
+    let script = "curl https://raw.githubusercontent.com/" + githubUsername + "/cpp-projectify/master/generate.py | python3 - -n " + projectName + " -g " + githubUsername;
 
-    script += "curl https://raw.githubusercontent.com/jkunstwald/cpp-projectify/master/generate.py | python3 - -n " + projectName;
-
+    const projectUrl = document.getElementById("git_repository_text_field").value;
     if (projectUrl) {
         script += " -u " + projectUrl;
     }
 
+    const enabledLibs = getEnabledLibraries();
     for (const lib of enabledLibs) {
         script += " " + lib.name;
     }
