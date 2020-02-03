@@ -285,9 +285,9 @@ function onRepositoryChanged() {
 
 function generate_script() {
     const projectName = document.getElementById("project_name_text_field").value.replace(/\s/g, '');
-    const githubUsername = document.location.host.split(".")[0];
+    const currentUrl = document.location.href;
 
-    let script = "curl https://raw.githubusercontent.com/" + githubUsername + "/cpp-projectify/master/generate.py | python3 - -n " + projectName + " -g " + githubUsername;
+    let script = "curl " + currentUrl + "generate.py | python3 - -n " + projectName + " -o " + currentUrl;
 
     const projectUrl = document.getElementById("git_repository_text_field").value;
     if (projectUrl) {
