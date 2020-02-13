@@ -111,7 +111,7 @@
 
         {
             "name": "glfw",
-            "git_url": "git@github.com:glfw/glfw.git",
+            "git_url": "https://github.com/glfw/glfw.git",
             "description": "Multiplatform OpenGL library",
             "project_url": "https://www.glfw.org/",
             "dependencies": []
