@@ -1,7 +1,8 @@
 class Library {
-    constructor(name, url, description, projectPage, dependencies) {
+    constructor(name, git_url_ssh, git_url_https, description, projectPage, dependencies) {
         this.name = name;
-        this.url = url;
+        this.git_url_ssh = git_url_ssh;
+        this.git_url_https = git_url_https;
         this.dependencies = dependencies;
         this.checkbox == null;
         this.projectPage = projectPage;
@@ -10,6 +11,7 @@ class Library {
 }
 
 var getJSON = function (url, callback) {
+    console.log(url)
     var xhr = new XMLHttpRequest();
     xhr.open('GET', url, true);
     xhr.responseType = 'json';
@@ -35,7 +37,8 @@ function load_libraries(callback) {
             for (const lib of libs.libraries) {
                 output.push(new Library(
                     lib.name,
-                    lib.git_url,
+                    lib.git_url_ssh,
+                    lib.git_url_https,
                     lib.description,
                     lib.project_url,
                     lib.dependencies

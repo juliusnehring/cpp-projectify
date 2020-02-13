@@ -4,6 +4,7 @@ import json
 import os.path
 from subprocess import call
 from pathlib import Path
+import sys
 
 
 class Library(object):
@@ -231,8 +232,13 @@ def setup_project(args):
     create_main(os.path.join(project_name, 'src', 'main.cc'))
 
     for lib in enabled_libs:
-        call(["git", "-C", os.path.join(project_name,
-                                        "extern"), "submodule", "add", lib.git_url, lib.name])
+        extern_folder = os.path.join(project_name, "extern")
+        # try ssh first, https second
+        success = call(["git", "-C", extern_folder , "submodule", "add", lib.git_url_ssh, lib.name])
+        if success != 0:
+            success = call(["git", "-C", extern_folder , "submodule", "add", lib.git_url_https, lib.name])
+        if success != 0:
+            print("Failed to clone " + lib.name + "!", file=sys.stderr)
 
     call(["git", "-C", project_name, "submodule",
           "update", "--init", "--recursive"])

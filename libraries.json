@@ -2,28 +2,32 @@
     "libraries": [
         {
             "name": "clean-core",
-            "git_url": "git@github.com:project-arcana/clean-core.git",
+            "git_url_ssh": "git@github.com:project-arcana/clean-core.git",
+            "git_url_https": "https://github.com/project-arcana/clean-core.git",
             "description": "STL Replacement",
             "project_url": "https://github.com/project-arcana/clean-core",
             "dependencies": []
         },
         {
             "name": "typed-geometry",
-            "git_url": "https://www.graphics.rwth-aachen.de:9000/ptrettner/typed-geometry.git",
+            "git_url_ssh": "git@www.graphics.rwth-aachen.de:ptrettner/typed-geometry.git",
+            "git_url_https": "https://www.graphics.rwth-aachen.de:9000/ptrettner/typed-geometry.git",
             "description": "Math",
             "project_url": "https://graphics.rwth-aachen.de:9000/ptrettner/typed-geometry",
             "dependencies": []
         },
         {
             "name": "ctracer",
-            "git_url": "https://www.graphics.rwth-aachen.de:9000/ptrettner/ctracer.git",
+            "git_url_ssh": "git@www.graphics.rwth-aachen.de:ptrettner/ctracer.git",
+            "git_url_https": "https://www.graphics.rwth-aachen.de:9000/ptrettner/ctracer.git",
             "description": "Profiling",
             "project_url": "https://graphics.rwth-aachen.de:9000/ptrettner/ctracer",
             "dependencies": []
         },
         {
             "name": "reflector",
-            "git_url": "git@github.com:project-arcana/reflector.git",
+            "git_url_ssh": "git@github.com:project-arcana/reflector.git",
+            "git_url_https": "https://github.com/project-arcana/reflector.git",
             "description": "Reflection",
             "project_url": "https://github.com/project-arcana/reflector",
             "dependencies": [
@@ -32,7 +36,8 @@
         },
         {
             "name": "task-dispatcher",
-            "git_url": "git@github.com:project-arcana/task-dispatcher.git",
+            "git_url_ssh": "git@github.com:project-arcana/task-dispatcher.git",
+            "git_url_https": "https://github.com/project-arcana/task-dispatcher.git",
             "description": "Multithreading",
             "project_url": "https://github.com/project-arcana/task-dispatcher",
             "dependencies": [
@@ -41,7 +46,8 @@
         },
         {
             "name": "rich-log",
-            "git_url": "git@github.com:project-arcana/rich-log.git",
+            "git_url_ssh": "git@github.com:project-arcana/rich-log.git",
+            "git_url_https": "https://@github.com/project-arcana/rich-log.git",
             "description": "Logging",
             "project_url": "https://github.com/project-arcana/rich-log",
             "dependencies": ["reflector"]
@@ -50,7 +56,8 @@
 
         {
             "name": "polymesh",
-            "git_url": "https://www.graphics.rwth-aachen.de:9000/ptrettner/polymesh.git",
+            "git_url_ssh": "git@graphics.rwth-aachen.de:ptrettner/polymesh.git",
+            "git_url_https": "https://www.graphics.rwth-aachen.de:9000/ptrettner/polymesh.git",
             "description": "Halfedge Meshes",
             "project_url": "https://graphics.rwth-aachen.de:9000/ptrettner/polymesh",
             "dependencies": []
@@ -59,7 +66,8 @@
 
         {
             "name": "phantasm-hardware-interface",
-            "git_url": "git@github.com:project-arcana/phantasm-hardware-interface.git",
+            "git_url_ssh": "git@github.com:project-arcana/phantasm-hardware-interface.git",
+            "git_url_https": "https://github.com/project-arcana/phantasm-hardware-interface.git",
             "description": "D3D12/Vulkan Abstraction",
             "project_url": "https://github.com/project-arcana/phantasm-hardware-interface",
             "dependencies": [
@@ -70,7 +78,8 @@
         },
         {
             "name": "phantasm-renderer",
-            "git_url": "git@github.com:project-arcana/phantasm-renderer.git",
+            "git_url_ssh": "git@github.com:project-arcana/phantasm-renderer.git",
+            "git_url_https": "https://github.com/project-arcana/phantasm-renderer.git",
             "description": "Higher-level Rendering",
             "project_url": "https://github.com/project-arcana/phantasm-renderer",
             "dependencies": [
@@ -79,24 +88,26 @@
         },
         {
             "name": "structured-interface",
-            "git_url": "git@github.com:project-arcana/structured-interface.git",
+            "git_url_ssh": "git@github.com:project-arcana/structured-interface.git",
+            "git_url_https": "https://github.com/project-arcana/structured-interface.git",
             "description": "Immediate-mode UI",
             "project_url": "https://github.com/project-arcana/structured-interface",
             "dependencies": []
         },
         {
             "name": "phantasm-viewer",
-            "git_url": "git@github.com:project-arcana/phantasm-viewer.git",
+            "git_url_ssh": "git@github.com:project-arcana/phantasm-viewer.git",
+            "git_url_https": "https://github.com/project-arcana/phantasm-viewer.git",
             "description": "Viewer",
             "project_url": "https://github.com/project-arcana/phantasm-viewer",
             "dependencies": [
                 "phantasm-renderer"
             ]
         },
-
         {
             "name": "arcana-incubator",
-            "git_url": "git@github.com:project-arcana/arcana-incubator.git",
+            "git_url_ssh": "git@github.com:project-arcana/arcana-incubator.git",
+            "git_url_https": "https://github.com/project-arcana/arcana-incubator.git",
             "description": "WIP Libraries",
             "project_url": "https://github.com/project-arcana/arcana-incubator",
             "dependencies": [
@@ -107,18 +118,18 @@
                 "phantasm-hardware-interface"
             ]
         },
-
-
         {
             "name": "glfw",
-            "git_url": "https://github.com/glfw/glfw.git",
+            "git_url_ssh": "git@github.com:glfw/glfw.git",
+            "git_url_https": "https://github.com/glfw/glfw.git",
             "description": "Multiplatform OpenGL library",
             "project_url": "https://www.glfw.org/",
             "dependencies": []
         },
         {
             "name": "glow",
-            "git_url": "https://www.graphics.rwth-aachen.de:9000/Glow/glow.git",
+            "git_url_ssh": "git@www.graphics.rwth-aachen.de:Glow/glow.git",
+            "git_url_https": "https://www.graphics.rwth-aachen.de:9000/Glow/glow.git",
             "description": "OpenGL Wrapper",
             "project_url": "https://graphics.rwth-aachen.de:9000/Glow/glow",
             "dependencies": [
@@ -128,14 +139,16 @@
         },
         {
             "name": "imgui",
-            "git_url": "https://www.graphics.rwth-aachen.de:9000/ptrettner/imgui-lean.git",
+            "git_url_ssh": "git@graphics.rwth-aachen.de:ptrettner/imgui-lean.git",
+            "git_url_https": "https://www.graphics.rwth-aachen.de:9000/ptrettner/imgui-lean.git",
             "description": "Dear ImGui",
             "project_url": "https://github.com/ocornut/imgui",
             "dependencies": []
         },
         {
             "name": "glow-extras",
-            "git_url": "https://www.graphics.rwth-aachen.de:9000/Glow/glow-extras.git",
+            "git_url_ssh": "git@graphics.rwth-aachen.de:sGlow/glow-extras.git",
+            "git_url_https": "https://www.graphics.rwth-aachen.de:9000/Glow/glow-extras.git",
             "description": "GLOW misc",
             "project_url": "https://graphics.rwth-aachen.de:9000/Glow/glow-extras",
             "dependencies": [
@@ -145,7 +158,8 @@
         },
         {
             "name": "nexus",
-            "git_url": "git@github.com:project-arcana/nexus.git",
+            "git_url_ssh": "git@github.com:project-arcana/nexus.git",
+            "git_url_https": "https://github.com/project-arcana/nexus.git",
             "description": "Unit Tests",
             "project_url": "https://github.com/project-arcana/nexus",
             "dependencies": [
