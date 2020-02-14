@@ -195,6 +195,11 @@ function depends_on(lib, dependee) {
     return lib.dependencies.includes(dependee.name);
 }
 
+function has_addon(lib, addon)
+{
+    return lib.addons.includes(addon.name);
+}
+
 function getEnabledLibraries() {
     var libs = new Array();
     for (lib of libraries) {
@@ -205,7 +210,7 @@ function getEnabledLibraries() {
     // insertion sort
     for (var i = 1; i < libs.length; i++) {
         for (var j = i; j < libs.length; j++) {
-            if (depends_on(libs[i], libs[j])) {
+            if (depends_on(libs[i], libs[j]) || has_addon(lib[i], lib[j])) {
                 var tmp = libs[i];
                 libs[i] = libs[j];
                 libs[j] = tmp;
