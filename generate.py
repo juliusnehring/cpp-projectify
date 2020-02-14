@@ -145,7 +145,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${{BIN_DIR}})
 
         # GLOW needs a special bin directory
         if any(lib.name == "glow" for lib in enabled_libraries):
-            f.write("set(GLOW_BIN_DIR ${{CMAKE_SOURCE_DIR}}/bin)\n")
+            f.write("set(GLOW_BIN_DIR ${CMAKE_SOURCE_DIR}/bin)\n")
 
         # GLFW is annoying
         if(any(lib.name == "glfw" for lib in enabled_libraries)):
