@@ -1,5 +1,5 @@
 class Library {
-    constructor(name, git_url_ssh, git_url_https, description, projectPage, dependencies) {
+    constructor(name, git_url_ssh, git_url_https, description, projectPage, dependencies, addons) {
         this.name = name;
         this.git_url_ssh = git_url_ssh;
         this.git_url_https = git_url_https;
@@ -7,6 +7,7 @@ class Library {
         this.checkbox == null;
         this.projectPage = projectPage;
         this.description = description;
+        this.addons = addons;
     }
 }
 
@@ -28,7 +29,7 @@ var getJSON = function (url, callback) {
 
 function load_libraries(callback) {
     var url = "libraries.json";
-    output = [];
+    var output = [];
     getJSON(url, function (err, libs) {
         if (err !== null) {
             console.log("something went wrong " + err);
@@ -41,7 +42,8 @@ function load_libraries(callback) {
                     lib.git_url_https,
                     lib.description,
                     lib.project_url,
-                    lib.dependencies
+                    lib.dependencies,
+                    lib.addons
                 ));
             }
             callback(output);
@@ -210,7 +212,7 @@ function getEnabledLibraries() {
     // insertion sort
     for (var i = 1; i < libs.length; i++) {
         for (var j = i; j < libs.length; j++) {
-            if (depends_on(libs[i], libs[j]) || has_addon(lib[i], lib[j])) {
+            if (depends_on(libs[i], libs[j]) || has_addon(libs[i], libs[j])) {
                 var tmp = libs[i];
                 libs[i] = libs[j];
                 libs[j] = tmp;
