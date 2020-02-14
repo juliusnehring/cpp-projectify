@@ -6,7 +6,8 @@
             "git_url_https": "https://github.com/project-arcana/clean-core.git",
             "description": "STL Replacement",
             "project_url": "https://github.com/project-arcana/clean-core",
-            "dependencies": []
+            "dependencies": [],
+            "addons": []
         },
         {
             "name": "typed-geometry",
@@ -14,7 +15,8 @@
             "git_url_https": "https://www.graphics.rwth-aachen.de:9000/ptrettner/typed-geometry.git",
             "description": "Math",
             "project_url": "https://graphics.rwth-aachen.de:9000/ptrettner/typed-geometry",
-            "dependencies": []
+            "dependencies": [],
+            "addons": []
         },
         {
             "name": "ctracer",
@@ -22,7 +24,8 @@
             "git_url_https": "https://www.graphics.rwth-aachen.de:9000/ptrettner/ctracer.git",
             "description": "Profiling",
             "project_url": "https://graphics.rwth-aachen.de:9000/ptrettner/ctracer",
-            "dependencies": []
+            "dependencies": [],
+            "addons": []
         },
         {
             "name": "reflector",
@@ -32,7 +35,8 @@
             "project_url": "https://github.com/project-arcana/reflector",
             "dependencies": [
                 "clean-core"
-            ]
+            ],
+            "addons": []
         },
         {
             "name": "task-dispatcher",
@@ -42,7 +46,8 @@
             "project_url": "https://github.com/project-arcana/task-dispatcher",
             "dependencies": [
                 "clean-core"
-            ]
+            ],
+            "addons": []
         },
         {
             "name": "rich-log",
@@ -50,20 +55,24 @@
             "git_url_https": "https://@github.com/project-arcana/rich-log.git",
             "description": "Logging",
             "project_url": "https://github.com/project-arcana/rich-log",
-            "dependencies": ["reflector"]
+            "dependencies": [
+                "clean-core",
+                "reflector"
+            ],
+            "addons": []
         },
-
-
         {
             "name": "polymesh",
             "git_url_ssh": "git@graphics.rwth-aachen.de:ptrettner/polymesh.git",
             "git_url_https": "https://www.graphics.rwth-aachen.de:9000/ptrettner/polymesh.git",
             "description": "Halfedge Meshes",
             "project_url": "https://graphics.rwth-aachen.de:9000/ptrettner/polymesh",
-            "dependencies": []
+            "dependencies": [],
+            "addons": [
+                "glm",
+                "typed-geometry"
+            ]
         },
-        
-
         {
             "name": "phantasm-hardware-interface",
             "git_url_ssh": "git@github.com:project-arcana/phantasm-hardware-interface.git",
@@ -74,6 +83,9 @@
                 "clean-core",
                 "typed-geometry",
                 "rich-log"
+            ],
+            "addons": [
+                "sdl2"
             ]
         },
         {
@@ -83,7 +95,13 @@
             "description": "Higher-level Rendering",
             "project_url": "https://github.com/project-arcana/phantasm-renderer",
             "dependencies": [
-                "phantasm-hardware-interface"
+                "phantasm-hardware-interface",
+                "clean-core",
+                "typed-geometry",
+                "rich-log"
+            ],
+            "addons": [
+                "reflector"
             ]
         },
         {
@@ -92,7 +110,8 @@
             "git_url_https": "https://github.com/project-arcana/structured-interface.git",
             "description": "Immediate-mode UI",
             "project_url": "https://github.com/project-arcana/structured-interface",
-            "dependencies": []
+            "dependencies": [],
+            "addons": []
         },
         {
             "name": "phantasm-viewer",
@@ -102,7 +121,8 @@
             "project_url": "https://github.com/project-arcana/phantasm-viewer",
             "dependencies": [
                 "phantasm-renderer"
-            ]
+            ],
+            "addons": []
         },
         {
             "name": "arcana-incubator",
@@ -113,10 +133,11 @@
             "dependencies": [
                 "clean-core",
                 "typed-geometry",
-                "rich-log",
                 "reflector",
-                "phantasm-hardware-interface"
-            ]
+                "phantasm-hardware-interface",
+                "rich-log"
+            ],
+            "addons": []
         },
         {
             "name": "glfw",
@@ -124,7 +145,8 @@
             "git_url_https": "https://github.com/glfw/glfw.git",
             "description": "Multiplatform OpenGL library",
             "project_url": "https://www.glfw.org/",
-            "dependencies": []
+            "dependencies": [],
+            "addons": []
         },
         {
             "name": "glow",
@@ -135,6 +157,10 @@
             "dependencies": [
                 "glfw",
                 "typed-geometry"
+            ],
+            "addons": [
+                "glm",
+                "aion"
             ]
         },
         {
@@ -143,7 +169,8 @@
             "git_url_https": "https://www.graphics.rwth-aachen.de:9000/ptrettner/imgui-lean.git",
             "description": "Dear ImGui",
             "project_url": "https://github.com/ocornut/imgui",
-            "dependencies": []
+            "dependencies": [],
+            "addons": []
         },
         {
             "name": "glow-extras",
@@ -154,6 +181,13 @@
             "dependencies": [
                 "glow",
                 "imgui"
+            ],
+            "addons": [
+                "AntTweakBar",
+                "aion",
+                "assimp",
+                "polymesh",
+                "glfw"
             ]
         },
         {
@@ -166,6 +200,10 @@
                 "clean-core",
                 "ctracer",
                 "typed-geometry"
+            ],
+            "addons": [
+                "reflector",
+                "polymesh"
             ]
         }
     ]
