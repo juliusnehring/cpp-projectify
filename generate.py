@@ -43,7 +43,7 @@ def create_cmakelists(filepath, project_name: str, flags_linux: str, flags_msvc:
         # HEADER
         f.write(
 """
-cmake_minimum_required(VERSION 3.8)\n')
+cmake_minimum_required(VERSION 3.8)
 project({project_name})
 
 # ===============================================
