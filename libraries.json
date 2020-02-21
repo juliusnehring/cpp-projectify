@@ -174,7 +174,7 @@
         },
         {
             "name": "glow-extras",
-            "git_url_ssh": "git@graphics.rwth-aachen.de:sGlow/glow-extras.git",
+            "git_url_ssh": "git@graphics.rwth-aachen.de:Glow/glow-extras.git",
             "git_url_https": "https://www.graphics.rwth-aachen.de:9000/Glow/glow-extras.git",
             "description": "GLOW misc",
             "project_url": "https://graphics.rwth-aachen.de:9000/Glow/glow-extras",
