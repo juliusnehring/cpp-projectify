@@ -128,10 +128,6 @@ function init() {
             header_description.appendChild(document.createTextNode("Description"));
             header.appendChild(header_description);
 
-            var header_project_url = document.createElement("th");
-            header_project_url.appendChild(document.createTextNode("Repository"));
-            header.appendChild(header_project_url);
-
             var header_ssh = document.createElement("th");
             header_ssh.setAttribute("title", "The default method for cloning submodules is https. Check to use your ssh key instead.")
             header_ssh.appendChild(document.createTextNode("ssh"));
@@ -145,15 +141,16 @@ function init() {
 
             table.appendChild(header);
 
+            function make_checkbox_toggle (cb) {
+                return function (){cb.checked = !cb.checked;};
+            }
+
             for (lib of libraries) {
                 var row = document.createElement("tr");
-                var checkbox_container = document.createElement("td");
-                var name_container = document.createElement("td");
-                var description_container = document.createElement("td");
-                var project_page_container = document.createElement("td");
-                var useSSHContainer = document.createElement("td");
-                useSSHContainer.setAttribute("title", "The default method for cloning submodules is https. Check to use your ssh key instead.")
 
+
+                // select checkbox
+                var checkbox_container = document.createElement("td");
                 var selectedCheckbox = document.createElement("input");
                 var cbId = lib.name + "Checkbox";
                 selectedCheckbox.id = cbId;
@@ -162,36 +159,40 @@ function init() {
                 selectedCheckbox.value = lib.name;
                 selectedCheckbox.onclick = function () { onSelectedCheckboxClicked(this); };
                 lib.selectedCheckbox = selectedCheckbox;
+                checkbox_container.appendChild(selectedCheckbox);
+                row.appendChild(checkbox_container);
 
+                // name
+                var name_container = document.createElement("td");
+                name_container.onclick = make_checkbox_toggle(selectedCheckbox);
                 var label = document.createElement("label");
                 label.setAttribute("for", cbId);
-                label.innerText = lib.name;
-
-                var description = document.createTextNode(lib.description);
-
                 var project_page = document.createElement("a");
-                var link_text = document.createTextNode(new URL(lib.projectPage).hostname);
-                project_page.appendChild(link_text)
+                project_page.appendChild(document.createTextNode(lib.name))
                 project_page.title = lib.projectPage;
                 project_page.href = lib.projectPage;
                 project_page.setAttribute("target", "_blank");
-
-                checkbox_container.appendChild(selectedCheckbox);
+                label.appendChild(project_page);
                 name_container.appendChild(label);
-                description_container.appendChild(description);
-                project_page_container.appendChild(project_page);
+                row.appendChild(name_container);
 
+                // description
+                var description_container = document.createElement("td");
+                description_container.onclick = make_checkbox_toggle(selectedCheckbox);
+                var description = document.createTextNode(lib.description);
+                description_container.appendChild(description);
+                row.appendChild(description_container);
+
+                // ssh checkbox
+                var useSSHContainer = document.createElement("td");
+                useSSHContainer.setAttribute("title", "The default method for cloning submodules is https. Check to use your ssh key instead.")
                 var useSSHCheckbox = document.createElement("input");
                 useSSHCheckbox.id = lib.name + "useSSHCheckbox";
                 useSSHCheckbox.type = "checkbox";
                 lib.useSSHCheckbox = useSSHCheckbox;
                 useSSHContainer.appendChild(useSSHCheckbox);
-
-                row.appendChild(checkbox_container);
-                row.appendChild(name_container);
-                row.appendChild(description_container);
-                row.appendChild(project_page_container);
                 row.appendChild(useSSHContainer);
+
                 table.appendChild(row);
             }
             container.appendChild(table);
