@@ -1,0 +1,1 @@
+See https://juliusnehring.github.io/cpp-projectify/
