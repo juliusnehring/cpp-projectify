@@ -141,8 +141,11 @@ function init() {
 
             table.appendChild(header);
 
-            function make_checkbox_toggle (cb) {
-                return function (){cb.checked = !cb.checked;};
+            function make_checkbox_toggle(cb) {
+                return function () {
+                    cb.checked = !cb.checked;
+                    onSelectedCheckboxClicked(cb);
+                };
             }
 
             for (lib of libraries) {
