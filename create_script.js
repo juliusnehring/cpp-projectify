@@ -89,6 +89,20 @@ function onSelectedCheckboxClicked(cb) {
     }
 }
 
+
+function onAllSSHCheckboxClicked(cb) {
+    for (lib of libraries) {
+        lib.useSSHCheckbox.checked = cb.checked;
+    }
+}
+
+
+function onSelectAllCheckboxClicked(cb) {
+    for (lib of libraries) {
+        lib.selectedCheckbox.checked = cb.checked;
+    }
+}
+
 function init() {
     load_libraries(
         function (libs) {
@@ -97,7 +111,14 @@ function init() {
             var table = document.createElement("table");
 
             var header = document.createElement("tr");
-            header.appendChild(document.createElement("th")); // checkbox
+
+            var header_selectCheckbox = document.createElement("th");
+            var selectAllCheckbox = document.createElement("input");
+            selectAllCheckbox.id = "selectAllCheckbox";
+            selectAllCheckbox.type = "checkbox";
+            selectAllCheckbox.onclick = function () { onSelectAllCheckboxClicked(this); };
+            header_selectCheckbox.appendChild(selectAllCheckbox);
+            header.appendChild(header_selectCheckbox); // checkbox
 
             var header_name = document.createElement("th");
             header_name.appendChild(document.createTextNode("Name"));
@@ -114,6 +135,12 @@ function init() {
             var header_ssh = document.createElement("th");
             header_ssh.setAttribute("title", "The default method for cloning submodules is https. Check to use your ssh key instead.")
             header_ssh.appendChild(document.createTextNode("ssh"));
+            var selectAllSSHCheckbox = document.createElement("input");
+            selectAllSSHCheckbox.type = "checkbox";
+            selectAllSSHCheckbox.id = "selectAllSSHCheckbox";
+            selectAllSSHCheckbox.onclick = function () { onAllSSHCheckboxClicked(this); };
+            header_ssh.appendChild(selectAllSSHCheckbox);
+
             header.appendChild(header_ssh);
 
             table.appendChild(header);
@@ -125,7 +152,7 @@ function init() {
                 var description_container = document.createElement("td");
                 var project_page_container = document.createElement("td");
                 var useSSHContainer = document.createElement("td");
-                useSSHContainer.setAttribute("title","The default method for cloning submodules is https. Check to use your ssh key instead.")
+                useSSHContainer.setAttribute("title", "The default method for cloning submodules is https. Check to use your ssh key instead.")
 
                 var selectedCheckbox = document.createElement("input");
                 var cbId = lib.name + "Checkbox";
@@ -301,7 +328,7 @@ function onRepositoryChanged() {
 function generate_script() {
     const projectName = document.getElementById("project_name_text_field").value.replace(/\s/g, '');
     const currentUrl = document.location.href.replace("index.html", "");
-    
+
     let script = "curl " + currentUrl + "generate.py | python3 - -n " + projectName + " -o " + currentUrl;
 
     const projectUrl = document.getElementById("git_repository_text_field").value;
@@ -321,12 +348,10 @@ function generate_script() {
 
     const enabledLibs = getEnabledLibraries();
     for (const lib of enabledLibs) {
-        if(lib.useSSHCheckbox && lib.useSSHCheckbox.checked)
-        {
+        if (lib.useSSHCheckbox && lib.useSSHCheckbox.checked) {
             script += " -libssh " + lib.name;
         }
-        else
-        {
+        else {
             script += " -lib " + lib.name;
         }
     }
