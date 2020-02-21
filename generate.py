@@ -11,6 +11,11 @@ class Library(object):
     def __init__(self, data):
         self.__dict__ = data
 
+    def depends_on(self, other):
+        return other.name in self.dependencies
+
+    def has_addon_for(self, other):
+        return other.name in self.addons
 
 def load_libraries(origin_url: str):
     with urllib.request.urlopen(origin_url + "libraries.json") as url:
@@ -24,7 +29,7 @@ def load_libraries(origin_url: str):
 def create_main(filepath):
     with open(filepath, "w") as f:
         f.write(
-"""
+            """
 # include <cstdio>
 
 int main()
@@ -40,9 +45,34 @@ def create_cmakelists(filepath, project_name: str, flags_linux: str, flags_msvc:
 
         project_caps_prefix = project_name[0:3].upper()
 
-        # HEADER
+        # glow needs a special bin dir
+        if any(lib.name == "glow" for lib in enabled_libraries):
+            glow_bin_dir = "set(GLOW_BIN_DIR ${CMAKE_SOURCE_DIR}/bin)\n"
+        else:
+            glow_bin_dir = ""
+
+        # disable some annoying glfw defaults
+        if(any(lib.name == "glfw" for lib in enabled_libraries)):
+            glfw_configuration = (
+                "# ===============================================\n"
+                "# disable glfw additionals\n"
+                "option(GLFW_BUILD_EXAMPLES "" OFF)\n"
+                "option(GLFW_BUILD_TESTS "" OFF)\n"
+                "option(GLFW_BUILD_DOCS "" OFF)\n"
+                "option(GLFW_INSTALL "" OFF)\n")
+        else:
+            glfw_configuration = ""
+
+        subdirectories = ""
+        for lib in enabled_libraries:
+            subdirectories += 'add_subdirectory(extern/' + lib.name + ')\n'
+
+        link_libraries = ""
+        for lib in enabled_libraries:
+            link_libraries += "    " + lib.name + "\n"
+
         f.write(
-"""
+            """
 cmake_minimum_required(VERSION 3.8)
 project({project_name})
 
@@ -137,74 +167,72 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${{BIN_DIR}})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${{BIN_DIR}})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELWITHDEBINFO ${{BIN_DIR}})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${{BIN_DIR}})
+{glow_bin_dir}
+{glfw_configuration}
+
+# ===============================================s
+# add submodules
+{subdirectories}
+
+# ===============================================
+# configure executable
+file(GLOB_RECURSE SOURCES
+    "src/*.cc"
+    "src/*.hh"
+    "src/*.cpp"
+    "src/*.h"
+)
+
+# group sources according to folder structure
+source_group(TREE ${{CMAKE_CURRENT_SOURCE_DIR}} FILES ${{SOURCES}}))
+
+# ===============================================
+# add executable
+add_executable(${{PROJECT_NAME}} ${{SOURCES}})
+target_link_libraries(${{PROJECT_NAME}} PUBLIC
+{link_libraries}
+    ${{COMMON_LINKER_FLAGS}}
+)
+
+target_include_directories(${{PROJECT_NAME}} PUBLIC "src")
+target_compile_options(${{PROJECT_NAME}} PUBLIC ${{COMMON_COMPILER_FLAGS}})
 """.format(
     project_name=project_name,
     project_caps_prefix=project_caps_prefix,
     flags_msvc=flags_msvc,
-    flags_linux=flags_linux))
+    flags_linux=flags_linux,
+    glow_bin_dir=glow_bin_dir,
+    glfw_configuration=glfw_configuration,
+    subdirectories=subdirectories,
+    link_libraries=link_libraries))
 
-        # GLOW needs a special bin directory
-        if any(lib.name == "glow" for lib in enabled_libraries):
-            f.write("set(GLOW_BIN_DIR ${CMAKE_SOURCE_DIR}/bin)\n")
 
-        # GLFW is annoying
-        if(any(lib.name == "glfw" for lib in enabled_libraries)):
-            f.write(
-"""# ===============================================
-# disable glfw additionals
-option(GLFW_BUILD_EXAMPLES "" OFF)
-option(GLFW_BUILD_TESTS "" OFF)
-option(GLFW_BUILD_DOCS "" OFF)
-option(GLFW_INSTALL "" OFF)
-""")
-
-        # Add the submodules
-        f.write("\n")
-        f.write("# ===============================================\n")
-        f.write("# add submodules\n")
-        for lib in enabled_libraries:
-            f.write('add_subdirectory(extern/' + lib.name + ')\n')
-
-        f.write('\n')
-        f.write('# ===============================================\n')
-        f.write('# configure executable\n')
-        f.write('\n')
-        f.write('file(GLOB_RECURSE SOURCES\n')
-        f.write('    "src/*.cc"\n')
-        f.write('    "src/*.hh"\n')
-        f.write('    "src/*.cpp"\n')
-        f.write('    "src/*.h"\n')
-        f.write(')\n')
-        f.write('\n')
-
-        f.write('# group sources according to folder structure\n')
-        f.write(
-            'source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${SOURCES})\n')
-
-        f.write("\n")
-        f.write('# ===============================================\n')
-        f.write('# add executable\n\n')
-        f.write('add_executable(${PROJECT_NAME} ${SOURCES})\n')
-        f.write('target_link_libraries(${PROJECT_NAME} PUBLIC\n')
-        for lib in enabled_libraries:
-            f.write("    " + lib.name + "\n")
-        f.write("    ${COMMON_LINKER_FLAGS}\n")
-        f.write(')\n')
-        f.write('target_include_directories(${PROJECT_NAME} PUBLIC "src")\n')
-        f.write(
-            'target_compile_options(${PROJECT_NAME} PUBLIC ${COMMON_COMPILER_FLAGS})')
+def sort_libraries(libraries):
+    """Sort libraries according to their necessary include order"""
+    for i in range(len(libraries)):
+        for j in range(i, len(libraries)):
+            if libraries[i].depends_on(libraries[j]) or libraries[i].has_addon_for(libraries[j]):
+                tmp = libraries[i]
+                libraries[i] = libraries[j]
+                libraries[j] = tmp
+    return libraries
 
 
 def get_enabled_libs(args):
-    all_libs=load_libraries(args.origin)
-    return list(filter(lambda lib: lib.name in args.libraries, all_libs))
+    all_libs = load_libraries(args.origin)
+    lib_names = []
+    if args.library is not None:
+        lib_names += args.library
+    if args.libraryssh is not None:
+        lib_names += args.libraryssh
+    return sort_libraries(list(filter(lambda lib: lib.name in lib_names, all_libs)))
 
 
 def setup_project(args):
-    project_name=args.name
-    project_url=args.url
-    enabled_libs=get_enabled_libs(args)
-    origin_url=args.origin
+    project_name = args.name
+    project_url = args.url
+    origin_url = args.origin
+    enabled_libs = get_enabled_libs(args)
 
     if(os.path.isdir(project_name)):
         print("Directory " + project_name + " already exists! Aborting!")
@@ -223,19 +251,18 @@ def setup_project(args):
     Path(os.path.join(project_name, "README.md")).touch()
 
     # Download files
-    raw_data_download_url=origin_url
-    if not "localhost" in origin_url:
+    raw_data_download_url = origin_url
+    if "github" in origin_url:
         # extract github raw domain
-        github_username=origin_url.split("/")[2].split(".")[0]
-        github_reponame=origin_url.split("/")[3]
-        raw_data_download_url="https://raw.githubusercontent.com/{}/{}/master".format(
+        github_username = origin_url.split("/")[2].split(".")[0]
+        github_reponame = origin_url.split("/")[3]
+        raw_data_download_url = "https://raw.githubusercontent.com/{}/{}/master".format(
             github_username, github_reponame)
 
     urllib.request.urlretrieve(
         raw_data_download_url + "/data/.clang-format", os.path.join(project_name, ".clang-format"))
     urllib.request.urlretrieve(
         raw_data_download_url + "/data/.gitignore", os.path.join(project_name, ".gitignore"))
-
 
     os.mkdir(os.path.join(project_name, "extern"))
     os.mkdir(os.path.join(project_name, "src"))
@@ -244,31 +271,35 @@ def setup_project(args):
     create_main(os.path.join(project_name, 'src', 'main.cc'))
 
     for lib in enabled_libs:
-        extern_folder=os.path.join(project_name, "extern")
-        # try ssh first, https second
-        success=call(["git", "-C", extern_folder, "submodule",
-                     "add", lib.git_url_ssh, lib.name])
-        if success != 0:
-            success=call(["git", "-C", extern_folder, "submodule",
-                         "add", lib.git_url_https, lib.name])
-        if success != 0:
-            print("Failed to clone " + lib.name + "!", file=sys.stderr)
+        extern_folder = os.path.join(project_name, "extern")
 
-    call(["git", "-C", project_name, "submodule",
-          "update", "--init", "--recursive"])
+        # clone via https
+        if args.library is not None and lib.name in args.library:
+            success = call(["git", "-C", extern_folder, "submodule", "add", lib.git_url_https, lib.name])
+            if success != 0:
+                print("Failed to add submodule " + lib.name + " from " + lib.git_url_https, file=sys.stderr)
+        
+        # clone via ssh
+        if args.libraryssh is not None and lib.name in args.libraryssh:
+            success = call(["git", "-C", extern_folder, "submodule", "add", lib.git_url_ssh, lib.name])
+            if success != 0:
+                print("Failed to add submodule " + lib.name + " from " + lib.git_url_https, file=sys.stderr)
+        
+    call(["git", "-C", project_name, "submodule", "update", "--init", "--recursive"])
 
     print("DONE!")
 
 
 if __name__ == "__main__":
-    parser=argparse.ArgumentParser(
+    parser = argparse.ArgumentParser(
         description="Create project with dependencies")
     parser.add_argument("--name", "-n", type=str, required=True)
     parser.add_argument("--origin", "-o", type=str, required=True)
     parser.add_argument("--flags_linux", "-l", type=str)
     parser.add_argument("--flags_msvc", "-m", type=str)
     parser.add_argument("--url", "-u", type=str)
-    parser.add_argument("libraries", nargs='*', type=str)
-    args=parser.parse_args()
+    parser.add_argument("--library", "-lib", type=str, action='append')
+    parser.add_argument("--libraryssh", "-libssh", type=str, action='append')
+    args = parser.parse_args()
 
     setup_project(args)

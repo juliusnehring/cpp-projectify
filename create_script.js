@@ -4,7 +4,8 @@ class Library {
         this.git_url_ssh = git_url_ssh;
         this.git_url_https = git_url_https;
         this.dependencies = dependencies;
-        this.checkbox == null;
+        this.selectedCheckbox = null;
+        this.useSSHCheckbox = null;
         this.projectPage = projectPage;
         this.description = description;
         this.addons = addons;
@@ -12,7 +13,6 @@ class Library {
 }
 
 var getJSON = function (url, callback) {
-    console.log(url)
     var xhr = new XMLHttpRequest();
     xhr.open('GET', url, true);
     xhr.responseType = 'json';
@@ -65,8 +65,7 @@ function get_lib(name) {
 function disable_lib(name) {
     for (lib of libraries) {
         if (lib.dependencies.includes(name)) {
-            var othercb = lib.checkbox;
-            othercb.checked = false;
+            lib.selectedCheckbox.checked = false;
             disable_lib(lib.name);
         }
     }
@@ -75,13 +74,12 @@ function disable_lib(name) {
 function enable_lib(name) {
     lib = get_lib(name);
     for (const depend of lib.dependencies) {
-        var othercb = get_lib(depend).checkbox;
-        othercb.checked = true;
+        get_lib(depend).selectedCheckbox.checked = true;
         enable_lib(depend);
     }
 }
 
-function onCheckboxClicked(cb) {
+function onSelectedCheckboxClicked(cb) {
     var name = cb.value;
     if (cb.checked) {
         enable_lib(name);
@@ -100,15 +98,23 @@ function init() {
 
             var header = document.createElement("tr");
             header.appendChild(document.createElement("th")); // checkbox
+
             var header_name = document.createElement("th");
             header_name.appendChild(document.createTextNode("Name"));
             header.appendChild(header_name);
+
             var header_description = document.createElement("th");
             header_description.appendChild(document.createTextNode("Description"));
             header.appendChild(header_description);
+
             var header_project_url = document.createElement("th");
             header_project_url.appendChild(document.createTextNode("Repository"));
             header.appendChild(header_project_url);
+
+            var header_method = document.createElement("th");
+            header_method.appendChild(document.createTextNode("ssh"));
+            header.appendChild(header_method);
+
             table.appendChild(header);
 
             for (lib of libraries) {
@@ -117,15 +123,16 @@ function init() {
                 var name_container = document.createElement("td");
                 var description_container = document.createElement("td");
                 var project_page_container = document.createElement("td");
+                var useSSHContainer = document.createElement("td");
 
-                var checkbox = document.createElement("input");
+                var selectedCheckbox = document.createElement("input");
                 var cbId = lib.name + "Checkbox";
-                checkbox.id = cbId;
-                checkbox.type = "checkbox";
-                checkbox.textContent = lib.name;
-                lib.checkbox = checkbox;
-                checkbox.value = lib.name;
-                checkbox.onclick = function () { onCheckboxClicked(this); };
+                selectedCheckbox.id = cbId;
+                selectedCheckbox.type = "checkbox";
+                selectedCheckbox.textContent = lib.name;
+                selectedCheckbox.value = lib.name;
+                selectedCheckbox.onclick = function () { onSelectedCheckboxClicked(this); };
+                lib.selectedCheckbox = selectedCheckbox;
 
                 var label = document.createElement("label");
                 label.setAttribute("for", cbId);
@@ -140,15 +147,22 @@ function init() {
                 project_page.href = lib.projectPage;
                 project_page.setAttribute("target", "_blank");
 
-                checkbox_container.appendChild(checkbox);
+                checkbox_container.appendChild(selectedCheckbox);
                 name_container.appendChild(label);
                 description_container.appendChild(description);
                 project_page_container.appendChild(project_page);
+
+                var useSSHCheckbox = document.createElement("input");
+                useSSHCheckbox.id = lib.name + "useSSHCheckbox";
+                useSSHCheckbox.type = "checkbox";
+                lib.useSSHCheckbox = useSSHCheckbox;
+                useSSHContainer.appendChild(useSSHCheckbox);
 
                 row.appendChild(checkbox_container);
                 row.appendChild(name_container);
                 row.appendChild(description_container);
                 row.appendChild(project_page_container);
+                row.appendChild(useSSHContainer);
                 table.appendChild(row);
             }
             container.appendChild(table);
@@ -197,26 +211,15 @@ function depends_on(lib, dependee) {
     return lib.dependencies.includes(dependee.name);
 }
 
-function has_addon(lib, addon)
-{
+function has_addon(lib, addon) {
     return lib.addons.includes(addon.name);
 }
 
 function getEnabledLibraries() {
     var libs = new Array();
     for (lib of libraries) {
-        if (lib.checkbox && lib.checkbox.checked) {
+        if (lib.selectedCheckbox && lib.selectedCheckbox.checked) {
             libs.push(lib);
-        }
-    }
-    // insertion sort
-    for (var i = 1; i < libs.length; i++) {
-        for (var j = i; j < libs.length; j++) {
-            if (depends_on(libs[i], libs[j]) || has_addon(libs[i], libs[j])) {
-                var tmp = libs[i];
-                libs[i] = libs[j];
-                libs[j] = tmp;
-            }
         }
     }
     return libs;
@@ -295,8 +298,8 @@ function onRepositoryChanged() {
 
 function generate_script() {
     const projectName = document.getElementById("project_name_text_field").value.replace(/\s/g, '');
-    const currentUrl = document.location.href;
-
+    const currentUrl = document.location.href.replace("index.html", "");
+    
     let script = "curl " + currentUrl + "generate.py | python3 - -n " + projectName + " -o " + currentUrl;
 
     const projectUrl = document.getElementById("git_repository_text_field").value;
@@ -305,20 +308,25 @@ function generate_script() {
     }
 
     const gccClangFlags = document.getElementById("flags_linux").value;
-    if (gccClangFlags)
-    {
+    if (gccClangFlags) {
         script += " -l \"" + gccClangFlags + "\"";
     }
 
     const msvcFlags = document.getElementById("flags_msvc").value;
-    if (msvcFlags)
-    {
+    if (msvcFlags) {
         script += " -m \"" + msvcFlags + "\"";
     }
 
     const enabledLibs = getEnabledLibraries();
     for (const lib of enabledLibs) {
-        script += " " + lib.name;
+        if(lib.useSSHCheckbox && lib.useSSHCheckbox.checked)
+        {
+            script += " -libssh " + lib.name;
+        }
+        else
+        {
+            script += " -lib " + lib.name;
+        }
     }
 
     return script;
