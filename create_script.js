@@ -111,9 +111,10 @@ function init() {
             header_project_url.appendChild(document.createTextNode("Repository"));
             header.appendChild(header_project_url);
 
-            var header_method = document.createElement("th");
-            header_method.appendChild(document.createTextNode("ssh"));
-            header.appendChild(header_method);
+            var header_ssh = document.createElement("th");
+            header_ssh.setAttribute("title", "The default method for cloning submodules is https. Check to use your ssh key instead.")
+            header_ssh.appendChild(document.createTextNode("ssh"));
+            header.appendChild(header_ssh);
 
             table.appendChild(header);
 
@@ -124,6 +125,7 @@ function init() {
                 var description_container = document.createElement("td");
                 var project_page_container = document.createElement("td");
                 var useSSHContainer = document.createElement("td");
+                useSSHContainer.setAttribute("title","The default method for cloning submodules is https. Check to use your ssh key instead.")
 
                 var selectedCheckbox = document.createElement("input");
                 var cbId = lib.name + "Checkbox";

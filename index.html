@@ -1,106 +1,118 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<meta charset="UTF-8">
-<title>C++ Project maker</title>
+  <meta charset="UTF-8">
+  <title>C++ Project maker</title>
 </head>
 <style>
-body{
-  margin:15px auto;
-  line-height:1.4;
-  font-size:16px;
-  color:#444;
-  padding:0 10px;
-  font-family: sans-serif;
-  text-align:center;
-}
-h1,h2,h3{line-height:1.2}
+  body {
+    margin: 15px auto;
+    line-height: 1.4;
+    font-size: 16px;
+    color: #444;
+    padding: 0 10px;
+    font-family: sans-serif;
+    text-align: center;
+  }
 
-.wrapper-block {
+  h1,
+  h2,
+  h3 {
+    line-height: 1.2
+  }
+
+  .wrapper-block {
     display: inline-block;
     position: relative;
     vertical-align: top;
     text-align: left;
     max-width: 960px;
-}
+  }
 
-    #left_column{
-        max-width: 500px;
-    }
+  #left_column {
+    max-width: 500px;
+  }
 
-    table {
-      border-collapse: collapse;
-    }
-    
-    td, th {
-      border: 1px solid #dddddd;
-      text-align: left;
-      padding: 8px;
-    }
-    
-    tr:nth-child(even) {
-      background-color: #f1f1f1;
-    }
+  table {
+    border-collapse: collapse;
+  }
 
-    .input-row {
-      margin: 5px 25px;
-    }
-    
-    .input-row input {
-      padding: 5px;
-      margin: 5px;
-    }
+  td,
+  th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+  }
 
-    .input-row button {
-      padding: 5px;
-      margin: 5px 0;
-    }
+  tr:nth-child(even) {
+    background-color: #f1f1f1;
+  }
 
-    textarea#output_textarea {
-      margin: 5px 5px;
-      padding: 5px;
-      width: 100%;
-    }
-    </style>
+  .input-row {
+    margin: 5px 25px;
+  }
+
+  .input-row input {
+    padding: 5px;
+    margin: 5px;
+  }
+
+  .input-row button {
+    padding: 5px;
+    margin: 5px 0;
+  }
+
+  textarea#output_textarea {
+    margin: 5px 5px;
+    padding: 5px;
+    width: 100%;
+  }
+</style>
+
 <body>
 
-<div class="wrapper-block" id="left_column">
-  <div class="input-row">
-    <label for="git_repository_text_field">Existing Repository (optional)</label>
-    <input type="text" name="git_repository_text_field" id="git_repository_text_field" onchange="onRepositoryChanged()">
-  </div>
-  <div class="input-row">
-    <label for="flags_linux">clang/gcc flags</label>
-    <input type="text" name="flags_linux" id="flags_linux" value="-Wall -Wextra">
-  </div>
-  <div class="input-row">
-    <label for="flags_msvc">MSVC flags</label>
-    <input type="text" name="flags_msvc" id="flags_msvc" value="/MP">
-  </div>
-
-  <div class="input-row">
-    <label for="project_name_text_field">Project Name</label>
-    <input type="text" name="project_name_text_field" id="project_name_text_field" value="unnamed">
-  </div>
-  <div class="input-row">
-    <div name="result_div" id="result_div">
+  <div class="wrapper-block" id="left_column">
+    <div class="input-row">
+      <span
+        title="Some people prefer to first create a remote git repository before initially committing to it. The repository will then be cloned first and the project will be configured inside.">
+        <label for="git_repository_text_field">Existing Repository (optional)</label>
+        <input type="text" name="git_repository_text_field" id="git_repository_text_field"
+          onchange="onRepositoryChanged()">
+      </span>
+    </div>
+    <div class="input-row">
+      <label for="project_name_text_field">Project Name</label>
+      <input type="text" name="project_name_text_field" id="project_name_text_field" value="unnamed">
+    </div>
+    <div class="input-row">
+      <label for="flags_linux">clang/gcc flags</label>
+      <input type="text" name="flags_linux" id="flags_linux" value="-Wall -Wextra">
+    </div>
+    <div class="input-row">
+      <label for="flags_msvc">MSVC flags</label>
+      <input type="text" name="flags_msvc" id="flags_msvc" value="/MP">
+    </div>
+    <div class="input-row">
+      <div name="result_div" id="result_div">
         <button onclick="onGenerateButtonClick()">Generate</button>
         <br>
-        <textarea name="output_textarea" id="output_textarea" onclick="this.focus();this.select()" readonly="readonly" placeholder="command" rows="4"></textarea>
+        <textarea name="output_textarea" id="output_textarea" onclick="this.focus();this.select()" readonly="readonly"
+          placeholder="command" rows="4"></textarea>
+      </div>
     </div>
-  </div>
-  <div class="input-row">
-    <h3>Instructions:</h3>
-    <ol>
-      <li>Select libraries</li>
-      <li>Enter project name</li>
-      <li>Click "Generate"</li>
-      <li>Paste command into comand line</li>
-    </ol>
-    <h3>Notes:</h3>
-    <ul>
-      <li><b>Output:</b> The script creates a new folder &lt;project_name&gt; in your current working directory. The resulting folder structure is as follows:
-        <pre><code>- &lt;project_name&gt;
+    <div class="input-row">
+      <h3>Instructions:</h3>
+      <ol>
+        <li>Select libraries</li>
+        <li>Enter project name</li>
+        <li>Click "Generate"</li>
+        <li>Paste command into comand line</li>
+      </ol>
+      <h3>Output:</h3>
+      The script creates a new folder &lt;project_name&gt; in your current working directory. The resulting folder
+      structure is as follows:
+      <pre><code>- &lt;project_name&gt;
   - .gitignore
   - README.md
   - CMakeLists.txt
@@ -110,18 +122,15 @@ h1,h2,h3{line-height:1.2}
     - your_submodule_1
     - your_submodule_2
   - bin</code></pre>
-      </li>
-      <li><b>Existing Repository:</b> Some people prefer to first create a remote git repository before initially committing to it. If that is the case, you can enter its git url in the "Existing Repository (optional)" field. The repository will then be cloned first and the project will be configured inside.</li>
-      <li><b>SSH:</b> Default method for cloning submodules is https. Check the SSH checkbox to use your ssh key instead.</li>
-    </ul>
+    </div>
   </div>
-</div>
 
-<div class="wrapper-block">
-  <div id="libraries_div">
+  <div class="wrapper-block">
+    <div id="libraries_div">
+    </div>
   </div>
-</div>
 
 </body>
 <script src="create_script.js"></script>
+
 </html>
