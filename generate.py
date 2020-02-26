@@ -184,7 +184,7 @@ file(GLOB_RECURSE SOURCES
 )
 
 # group sources according to folder structure
-source_group(TREE ${{CMAKE_CURRENT_SOURCE_DIR}} FILES ${{SOURCES}}))
+source_group(TREE ${{CMAKE_CURRENT_SOURCE_DIR}} FILES ${{SOURCES}})
 
 # ===============================================
 # add executable
