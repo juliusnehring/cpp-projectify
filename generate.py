@@ -26,19 +26,37 @@ def load_libraries(origin_url: str):
         return libraries
 
 
-def create_main(filepath):
+def create_main(filepath: str, enabled_libraries):
+    has_glow_extras = any(lib.name == "glow-extras" for lib in enabled_libraries)
+    has_nexus = any(lib.name == "nexus" for lib in enabled_libraries)
     with open(filepath, "w") as f:
-        f.write(
-            """
-# include <cstdio>
+        f.write("#include <cstdio>\n\n")
+        if(has_nexus):
+            f.write("#include <nexus/Nexus.hh>\n\n")
 
-int main()
-{
-    printf("application main\\n");
-    return 0;
-}
-""")
+        if(has_glow_extras):
+            f.write("#include <glow-extras/glfw/GlfwContext.hh>\n\n")
 
+        if has_nexus:
+            f.write("int main(int argc, char** args)\n")
+        else:
+            f.write("int main(int /*argc*/, char** /*args*/)\n")
+        f.write("{\n")
+
+        f.write('    printf("application main\\n");\n')
+
+        if has_glow_extras:
+            f.write("\n    glow::glfw::GlfwContext ctx;\n")
+        
+        if has_nexus:
+            f.write(
+                "\n    nx::Nexus tests;\n"
+                "    tests.applyCmdArgs(argc, args);\n"
+                "    return tests.run();\n"
+            )
+
+        
+        f.write("}\n")
 
 def create_cmakelists(filepath, project_name: str, flags_linux: str, flags_msvc: str, enabled_libraries):
     with open(filepath, "w") as f:
@@ -268,7 +286,7 @@ def setup_project(args):
     os.mkdir(os.path.join(project_name, "src"))
     os.mkdir(os.path.join(project_name, "bin"))
 
-    create_main(os.path.join(project_name, 'src', 'main.cc'))
+    create_main(os.path.join(project_name, 'src', 'main.cc'), enabled_libs)
 
     for lib in enabled_libs:
         extern_folder = os.path.join(project_name, "extern")
