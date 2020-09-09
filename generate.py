@@ -214,6 +214,14 @@ target_link_libraries(${{PROJECT_NAME}} PUBLIC
 
 target_include_directories(${{PROJECT_NAME}} PUBLIC "src")
 target_compile_options(${{PROJECT_NAME}} PUBLIC ${{COMMON_COMPILER_FLAGS}})
+
+# dependency grouping in the IDE
+foreach(TARGET_NAME
+{link_libraries}
+)
+    set_property(TARGET ${{TARGET_NAME}} PROPERTY FOLDER "Extern")
+endforeach()
+
 """.format(
     project_name=project_name,
     project_caps_prefix=project_caps_prefix,
