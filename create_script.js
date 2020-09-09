@@ -353,10 +353,10 @@ function generate_script() {
     const enabledLibs = getEnabledLibraries();
     for (const lib of enabledLibs) {
         if (lib.useSSHCheckbox && lib.useSSHCheckbox.checked) {
-            script += " -libssh " + lib.name;
+            script += ' -libssh "' + lib.name + '"';
         }
         else {
-            script += " -lib " + lib.name;
+            script += ' -lib "' + lib.name + '"';
         }
     }
 
