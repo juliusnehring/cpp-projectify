@@ -207,7 +207,7 @@
             ]
         },
         {
-            "name": "Babel Serializer",
+            "name": "babel-serializer",
             "git_url_ssh": "git@github.com:project-arcana/babel-serializer.git",
             "git_url_https": "https://github.com/project-arcana/babel-serializer.git",
             "description": "Serialization",
@@ -222,7 +222,7 @@
             ]
         },
         {
-            "name": "Clean Ranges",
+            "name": "clean-ranges",
             "git_url_ssh": "git@github.com:project-arcana/clean-ranges.git",
             "git_url_https": "https://github.com/project-arcana/clean-ranges.git",
             "description": "Ranges",
