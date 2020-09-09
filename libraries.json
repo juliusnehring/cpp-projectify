@@ -205,6 +205,34 @@
                 "reflector",
                 "polymesh"
             ]
+        },
+        {
+            "name": "Babel Serializer",
+            "git_url_ssh": "git@github.com:project-arcana/babel-serializer.git",
+            "git_url_https": "https://github.com/project-arcana/babel-serializer.git",
+            "description": "Serialization",
+            "project_url": "https://github.com/project-arcana/babel-serializer",
+            "dependencies": [
+                "clean-core",
+                "typed-geometry",
+                "rich-log",
+                "reflector"
+            ],
+            "addons": [
+            ]
+        },
+        {
+            "name": "Clean Ranges",
+            "git_url_ssh": "git@github.com:project-arcana/clean-ranges.git",
+            "git_url_https": "https://github.com/project-arcana/clean-ranges.git",
+            "description": "Ranges",
+            "project_url": "https://github.com/project-arcana/clean-ranges",
+            "dependencies": [
+                "clean-core",
+                "typed-geometry"
+            ],
+            "addons": [
+            ]
         }
     ]
 }
