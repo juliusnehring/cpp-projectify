@@ -11,11 +11,13 @@
         },
         {
             "name": "typed-geometry",
-            "git_url_ssh": "git@www.graphics.rwth-aachen.de:ptrettner/typed-geometry.git",
-            "git_url_https": "https://www.graphics.rwth-aachen.de:9000/ptrettner/typed-geometry.git",
+            "git_url_ssh": "git@github.com:project-arcana/typed-geometry.git",
+            "git_url_https": "https://github.com/project-arcana/typed-geometry.git",
             "description": "Math",
-            "project_url": "https://graphics.rwth-aachen.de:9000/ptrettner/typed-geometry",
-            "dependencies": [],
+            "project_url": "https://github.com/project-arcana/typed-geometry",
+            "dependencies": [
+                "clean-core"
+            ],
             "addons": []
         },
         {
