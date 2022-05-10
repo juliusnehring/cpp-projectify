@@ -235,6 +235,20 @@
             ],
             "addons": [
             ]
+        },
+        {
+            "name": "texture-processor",
+            "git_url_ssh": "git@github.com:project-arcana/texture-processor.git",
+            "git_url_https": "https://github.com/project-arcana/texture-processor.git",
+            "description": "Textures/Images",
+            "project_url": "https://github.com/project-arcana/texture-processor",
+            "dependencies": [
+                "clean-core",
+                "typed-geometry",
+                "babel-serializer"
+            ],
+            "addons": [
+            ]
         }
     ]
 }
