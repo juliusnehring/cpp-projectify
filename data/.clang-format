@@ -57,3 +57,6 @@ CommentPragmas: '!Api.*'
 
 # Includes
 IncludeBlocks: Preserve
+
+# Other
+QualifierAlignment: Right
