@@ -22,10 +22,10 @@
         },
         {
             "name": "ctracer",
-            "git_url_ssh": "git@www.graphics.rwth-aachen.de:ptrettner/ctracer.git",
-            "git_url_https": "https://www.graphics.rwth-aachen.de:9000/ptrettner/ctracer.git",
+            "git_url_ssh": "git@github.com:project-arcana/ctracer.git",
+            "git_url_https": "https://github.com/project-arcana/ctracer.git",
             "description": "Profiling",
-            "project_url": "https://graphics.rwth-aachen.de:9000/ptrettner/ctracer",
+            "project_url": "https://github.com/project-arcana/ctracer",
             "dependencies": [],
             "addons": []
         },
