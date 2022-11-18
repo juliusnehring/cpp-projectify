@@ -65,10 +65,10 @@
         },
         {
             "name": "polymesh",
-            "git_url_ssh": "git@graphics.rwth-aachen.de:ptrettner/polymesh.git",
-            "git_url_https": "https://www.graphics.rwth-aachen.de:9000/ptrettner/polymesh.git",
+            "git_url_ssh": "git@github.com:project-arcana/polymesh.git",
+            "git_url_https": "https://github.com/project-arcana/polymesh.git",
             "description": "Halfedge Meshes",
-            "project_url": "https://graphics.rwth-aachen.de:9000/ptrettner/polymesh",
+            "project_url": "https://github.com/project-arcana/polymesh",
             "dependencies": [],
             "addons": [
                 "glm",
