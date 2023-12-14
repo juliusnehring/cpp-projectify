@@ -201,7 +201,8 @@
             "dependencies": [
                 "clean-core",
                 "ctracer",
-                "typed-geometry"
+                "typed-geometry",
+                "rich-log"
             ],
             "addons": [
                 "reflector",
