@@ -32,7 +32,7 @@ def create_main(filepath: str, enabled_libraries):
     with open(filepath, "w") as f:
         f.write("#include <cstdio>\n\n")
         if(has_nexus):
-            f.write("#include <nexus/Nexus.hh>\n\n")
+            f.write("#include <nexus/run.hh>\n\n")
 
         if(has_glow_extras):
             f.write("#include <glow-extras/glfw/GlfwContext.hh>\n\n")
@@ -49,13 +49,8 @@ def create_main(filepath: str, enabled_libraries):
             f.write("\n    glow::glfw::GlfwContext ctx;\n")
         
         if has_nexus:
-            f.write(
-                "\n    nx::Nexus tests;\n"
-                "    tests.applyCmdArgs(argc, args);\n"
-                "    return tests.run();\n"
-            )
+            f.write("    return nx::run(argc, args);\n")
 
-        
         f.write("}\n")
 
 def create_cmakelists(filepath, project_name: str, flags_linux: str, flags_msvc: str, enabled_libraries):
